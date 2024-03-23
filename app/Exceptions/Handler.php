@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\ApiError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +28,15 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e) {
+        if ($e instanceof HttpException) {
+            $data = new ApiError("EXCPHAND001", $e->getMessage(), $request->path());
+
+            return response()->json($data->toArray(), $e->getStatusCode());
+        }
+
+        return parent::render($request, $e);
     }
 }
