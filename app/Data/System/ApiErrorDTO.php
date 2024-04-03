@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Data\System;
 
 /**
  * @OA\Schema(
- *      schema="ApiError",
+ *      schema="ApiErrorDTO",
  *      @OA\Property(property="code", type="string", example="EXCPHAND001"),
  *      @OA\Property(property="endpoint", type="string", example="api/endpoint"),
  *      @OA\Property(property="message", type="string", example="Ocorreu um erro.")
  * )
  */
-class ApiError
+class ApiErrorDTO
 {
     private $code;
     private $endpoint;

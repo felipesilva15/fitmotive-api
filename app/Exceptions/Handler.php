@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Helpers\ApiError;
+use App\Data\System\ApiErrorDTO;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e) {
         if ($e instanceof HttpException) {
-            $data = new ApiError("EXCPHAND001", $e->getMessage(), $request->path());
+            $data = new ApiErrorDTO("EXCPHAND001", $e->getMessage(), $request->path());
 
             return response()->json($data->toArray(), $e->getStatusCode());
         }
