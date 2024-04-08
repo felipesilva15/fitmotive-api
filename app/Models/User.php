@@ -22,7 +22,9 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'cpf_cnpj',
-        'birth_date'
+        'birth_date',
+        'bank_gateway_id',
+        'inactive'
     ];
 
     /**
@@ -42,6 +44,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birth_date' => 'date',
         'password' => 'hashed',
     ];
 
@@ -55,9 +58,13 @@ class User extends Authenticatable implements JWTSubject
 
     public static function rules(): Array {
         return [
-            'name' => 'required|string|max:80',
-            'email' => 'required|email',
-            'password' => 'required|string|min:3'
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:3',
+            'cpf_cnpj' => 'required|string|unique:users|min:11|max:14',
+            'birth_date' => 'required|date',
+            'bank_gateway_id' => 'string|max:60',
+            'inactive' => 'boolean'
         ];
     }
 }

@@ -17,13 +17,10 @@ class UserController extends Controller
     public function store(Request $request) {
         $request->validate(User::rules());
 
-        $data = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'cpf_cnpj' => $request->cpf_cnpj,
-            'birth_date' => $request->birth_date
-        ]);
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
+        
+        $data = User::create($data);
 
         return response()->json($data, 201);
     }
