@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('provider_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('patient_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('financial_transaction_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('bank_gateway_id', 60)->nullable();
             $table->string('description', 80)->nullable();
             $table->enum('payment_method', ['CREDIT_CARD', 'DEBIT_CARD', 'PIX', 'BOLETO']);

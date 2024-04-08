@@ -12,7 +12,7 @@ class OrderDTO
     }
 
     public function setId(string $id) {
-        return  $this->id = $id;
+        return  $this->id = (string) $id;
     }
 
     public function getReferenceId(): string {
@@ -20,6 +20,10 @@ class OrderDTO
     }
 
     public function setReferenceId(string $reference_id) {
-        return  $this->reference_id = $reference_id;
+        return  $this->reference_id = (string) $reference_id;
+    }
+
+    public function toArray(): array {
+        return get_object_vars($this);
     }
 }

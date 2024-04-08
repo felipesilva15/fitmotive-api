@@ -20,7 +20,9 @@ class UserController extends Controller
         $data = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'cpf_cnpj' => $request->cpf_cnpj,
+            'birth_date' => $request->birth_date
         ]);
 
         return response()->json($data, 201);
