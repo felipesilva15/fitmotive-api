@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('provider_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->decimal('service_price', 6, 2);
+            $table->enum('billing_recurrence', ['WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'QUARTERLY', 'SEMI_ANNUAL', 'ANNUAL']);
             $table->timestamps();
         });
     }
