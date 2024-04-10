@@ -29,7 +29,7 @@ class Plan extends Model
         return [
             'name' => 'required|string|max:255',
             'description' => 'string',
-            'price' => 'required|decimal:6,2',
+            'price' => 'required|decimal:0,2',
             'trial_days' => 'integer',
             'period' => ['required', ValidationRule::enum(PlanPeriodEnum::class)],
             'bank_gateway_id' => 'string|max:60'

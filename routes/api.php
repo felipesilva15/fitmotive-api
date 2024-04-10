@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
+use App\Models\Plan;
+use App\Services\PagSeguro\PagSeguroSubscriptionService;
 use Illuminate\Support\Facades\Route;
 
 // Auth
@@ -9,6 +12,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // User
 Route::post('/user', [UserController::class, 'store']);
+
+// Plan
+Route::apiResource('/plan', PlanController::class);
 
 Route::group(['middleware' => 'auth:api'], function () {
     // User
