@@ -88,4 +88,18 @@ class Controller extends BaseController
 
         return response()->json(['message' => 'Registro deletado com sucesso!'], 200);
     }
+
+    public function toogleActivation ($id) {
+        $data = $this->model::find($id);
+
+        if (!$data) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $data->update([
+            'inactive' => !$data->inactive
+        ]);
+
+        return response()->noContent();
+    }
 }
