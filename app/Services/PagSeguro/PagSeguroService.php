@@ -2,12 +2,8 @@
 
 namespace App\Services\PagSeguro;
 
-use App\Data\PagSeguro\AccessTokenDTO;
-use App\Data\PagSeguro\AmountDTO;
-use App\Data\PagSeguro\ErrorDTO;
-use App\Enums\CurrencyEnum;
-use App\Exceptions\ExternalToolErrorException;
-use Illuminate\Support\Facades\Http;
+use App\Data\PagSeguro\Response\TokenDTO;
+use App\Enums\HttpMethodEnum;
 
 class PagSeguroService
 {
@@ -17,6 +13,7 @@ class PagSeguroService
     private string $clientSecret;
     private string $authRedirectUri;
     private string $scopes;
+    private PagSeguroApiService $apiService;
 
     public function  __construct() {
         $this->baseUrl = env('PAGSEGURO_API_BASE_URL', '');
@@ -25,6 +22,7 @@ class PagSeguroService
         $this->clientSecret = env('PAGSEGURO_API_CLIENT_SECRET', '');
         $this->authRedirectUri = env('PAGSEGURO_API_CONNECT_REDIRECT_URI', '');
         $this->scopes = env('PAGSEGURO_API_SCOPES', '');
+        $this->apiService = new PagSeguroApiService();
     }
 
     public function getConnectAuthorizationUri() {
@@ -33,33 +31,21 @@ class PagSeguroService
         return $url;
     }
 
-    public function getAccessToken(string $code) {
-        $url = "{$this->baseUrl}/oauth2/token";
-        $data = [];
-        $token = '123';
-
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$token}",
-            'X_CLIENT_SECRET' => '',
-            'X_CLIENT_SECRET' => ''
-        ])->acceptJson()->post($url, $data);
-
-        if (!$response->successful()) {
-            $data = [];
-
-            foreach ($response->json()['error_messages'] as $error) {
-                array_push($data, new ErrorDTO($error));
-            }
-
-            throw new ExternalToolErrorException();
-        }
-
-        $accessTokenDTO = new AccessTokenDTO($response->json());
-
-        return $accessTokenDTO;
+    public function generateToken(string $code): void {
+        $token = $this->requestToken($code);
+        $this->saveToken($token);
     }
 
-    private function setAccessToken() {
+    public function requestToken(string $code): TokenDTO {
+        $url = "{$this->baseUrl}/oauth2/token";
+        $data = [];
+
+        $response = $this->apiService->request($url, HttpMethodEnum::POST, $data, TokenDTO::class);
+
+        return $response;
+    }
+
+    private function saveToken(TokenDTO $tokenData): void {
 
     }
 } 
