@@ -10,22 +10,17 @@ use Illuminate\Support\Facades\Http;
 
 class PagSeguroApiService
 {
-    private array $defaultHeaders;
     private string $token;
     
     public function __construct() {
         $this->token = env('PAGSEGURO_API_TOKEN', '');
-        $this->defaultHeaders = [
-            'Authorization' => "Bearer {$this->token}",
-            'content-type' => 'application/json'
-        ];
     }
 
     public function request (string $url, HttpMethodEnum $method, array $data, string $dtoClass): mixed {
         $response = $this->makeRequest($url, $method, $data);
 
         if(!$response->successful()) {
-            $errors = $this->parseError($response);
+            dd($response->json());
             throw new ExternalToolErrorException();
         }
 
@@ -39,9 +34,12 @@ class PagSeguroApiService
     }
 
     public function makeRequest(string $url, HttpMethodEnum $method, ?array $data = []): Response {
-        return Http::withHeaders($this->defaultHeaders)
+        return Http::withToken($this->token, 'Bearer')
+            ->withHeaders([
+                'content-type' => 'application/json'
+            ])
             ->acceptJson()
-            ->{$method}($url, $data);
+            ->{$method->value}($url, $data);
     }
 
     public function parseResponse (Response $response, string $dtoClass): mixed {
