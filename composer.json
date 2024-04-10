@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "spatie/data-transfer-object": "^3.9",
         "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
@@ -55,9 +56,6 @@
         }
     },
     "config": {
-        "platform": {
-            "php": "8.2"
-        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,

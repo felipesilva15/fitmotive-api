@@ -3,29 +3,13 @@
 namespace App\Data\PagSeguro;
 
 use App\Enums\CurrencyEnum;
+use Spatie\DataTransferObject\Attributes\CastWith;
+use Spatie\DataTransferObject\Casters\EnumCaster;
+use Spatie\DataTransferObject\DataTransferObject;
 
-class AmountDTO 
+class AmountDTO extends DataTransferObject
 {
-    private string $currency = CurrencyEnum::Real;
-    private int $value;
-
-    public function getCurrency(): string {
-        return  (string) $this->currency;
-    }
-
-    public function setCurrency(string $currency) {
-        return  $this->currency = (string) $currency;
-    }
-
-    public function getValue(): int {
-        return  (int) $this->value;
-    }
-
-    public function setValue(int $value) {
-        return  $this->value = (int) $value;
-    }
-
-    public function toArray(): array {
-        return get_object_vars($this);
-    }
+    #[CastWith(EnumCaster::class, CurrencyEnum::class)]
+    public CurrencyEnum $currency = CurrencyEnum::Real;
+    public int $value;
 }

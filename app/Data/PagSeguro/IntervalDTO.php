@@ -3,29 +3,13 @@
 namespace App\Data\PagSeguro;
 
 use App\Enums\PlanPeriodEnum;
+use Spatie\DataTransferObject\Attributes\CastWith;
+use Spatie\DataTransferObject\Casters\EnumCaster;
+use Spatie\DataTransferObject\DataTransferObject;
 
-class IntervalDTO 
+class IntervalDTO extends DataTransferObject
 {
-    private string $unit = PlanPeriodEnum::Monthly;
-    private int $value = 1;
-
-    public function getUnit(): string {
-        return  (string) $this->unit;
-    }
-
-    public function setUnit(string $unit) {
-        return  $this->unit = (string) $unit;
-    }
-
-    public function getValue(): int {
-        return  (int) $this->value;
-    }
-
-    public function setValue(int $value) {
-        return  $this->value = (int) $value;
-    }
-
-    public function toArray(): array {
-        return get_object_vars($this);
-    }
+    #[CastWith(EnumCaster::class, PlanPeriodEnum::class)]
+    public PlanPeriodEnum $unit = PlanPeriodEnum::Monthly;
+    public int $value = 1;
 }

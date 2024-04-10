@@ -2,6 +2,13 @@
 
 namespace App\Services\PagSeguro;
 
+use App\Data\PagSeguro\AccessTokenDTO;
+use App\Data\PagSeguro\AmountDTO;
+use App\Data\PagSeguro\ErrorDTO;
+use App\Enums\CurrencyEnum;
+use App\Exceptions\ExternalToolErrorException;
+use Illuminate\Support\Facades\Http;
+
 class PagSeguroService
 {
     private string $baseUrl;
@@ -26,8 +33,30 @@ class PagSeguroService
         return $url;
     }
 
-    private function getAccessToken(string $code) {
+    public function getAccessToken(string $code) {
         $url = "{$this->baseUrl}/oauth2/token";
+        $data = [];
+        $token = '123';
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$token}",
+            'X_CLIENT_SECRET' => '',
+            'X_CLIENT_SECRET' => ''
+        ])->acceptJson()->post($url, $data);
+
+        if (!$response->successful()) {
+            $data = [];
+
+            foreach ($response->json()['error_messages'] as $error) {
+                array_push($data, new ErrorDTO($error));
+            }
+
+            throw new ExternalToolErrorException();
+        }
+
+        $accessTokenDTO = new AccessTokenDTO($response->json());
+
+        return $accessTokenDTO;
     }
 
     private function setAccessToken() {
