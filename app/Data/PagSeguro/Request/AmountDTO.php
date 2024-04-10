@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\PagSeguro;
+namespace App\Data\PagSeguro\Request;
 
 use App\Enums\CurrencyEnum;
 use Spatie\DataTransferObject\Attributes\CastWith;

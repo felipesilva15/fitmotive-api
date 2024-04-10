@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\PagSeguro;
+namespace App\Data\PagSeguro\Response;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
