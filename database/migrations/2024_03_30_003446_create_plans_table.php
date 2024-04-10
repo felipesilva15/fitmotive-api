@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price', 6, 2);
             $table->integer('trial_days')->nullable();
-            $table->enum('period', ['MONTHLY', 'SEMI_ANNUAL', 'ANNUALLY']);
+            $table->enum('biling_interval', ['DAY', 'MONTH', 'YEAR']);
             $table->string('bank_gateway_id', 60)->nullable();
             $table->timestamps();
         });
