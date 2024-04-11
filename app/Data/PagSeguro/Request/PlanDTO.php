@@ -3,7 +3,7 @@
 namespace App\Data\PagSeguro\Request;
 
 use App\Enums\CurrencyEnum;
-use App\Enums\PlanPeriodEnum;
+use App\Enums\PlanBillingIntervalEnum;
 use App\Helpers\Utils;
 use App\Models\Plan;
 use Spatie\DataTransferObject\Attributes\MapFrom;
@@ -30,7 +30,7 @@ class PlanDTO extends DataTransferObject
                 'value' => Utils::floatToStringBankFormat($plan->price)
             ],
             'interval' => [
-                'unit' => $plan->biling_interval,
+                'unit' => $plan->billing_interval->value,
                 'value' => 1
             ],
             'trial' => [

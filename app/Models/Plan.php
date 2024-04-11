@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\PlanPeriodEnum;
+use App\Enums\PlanBillingIntervalEnum;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,12 +17,12 @@ class Plan extends Model
         'description',
         'price',
         'trial_days',
-        'period',
+        'billing_interval',
         'bank_gateway_id'
     ];
 
     protected $casts = [
-        'period' => PlanPeriodEnum::class
+        'billing_interval' => PlanBillingIntervalEnum::class
     ];
 
     public static function rules(): array {
@@ -31,7 +31,7 @@ class Plan extends Model
             'description' => 'string',
             'price' => 'required|decimal:0,2',
             'trial_days' => 'integer',
-            'period' => ['required', ValidationRule::enum(PlanPeriodEnum::class)],
+            'billing_interval' => ['required', ValidationRule::enum(PlanBillingIntervalEnum::class)],
             'bank_gateway_id' => 'string|max:60'
         ];
     }
