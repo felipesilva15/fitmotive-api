@@ -36,6 +36,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Phone
     Route::apiResource('/phone', PhoneController::class);
+    
+    // Address
+    Route::apiResource('/address', AddressController::class);
 
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);

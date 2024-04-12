@@ -32,11 +32,16 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $with = [
-        'phones'
+        'phones',
+        'adresses'
     ];
 
     public function phones () {
         return $this->hasMany(Phone::class);
+    }
+
+    public function adresses () {
+        return $this->hasMany(Address::class);
     }
 
     public static function rules(): Array {
