@@ -12,11 +12,6 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -27,32 +22,21 @@ class User extends Authenticatable implements JWTSubject
         'inactive'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-    public function getJWTIdentifier() {
-        return $this->getKey();
-    }
+    protected $with = [
+        'phones'
+    ];
 
-    public function getJWTCustomClaims() {
-        return [];
+    public function phones () {
+        return $this->hasMany(Phone::class);
     }
 
     public static function rules(): Array {
@@ -65,5 +49,13 @@ class User extends Authenticatable implements JWTSubject
             'bank_gateway_id' => 'string|max:60',
             'inactive' => 'boolean'
         ];
+    }
+
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims() {
+        return [];
     }
 }
