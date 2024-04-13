@@ -33,7 +33,8 @@ class User extends Authenticatable implements JWTSubject
 
     protected $with = [
         'phones',
-        'adresses'
+        'adresses',
+        'payment_methods'
     ];
 
     public function phones () {
@@ -42,6 +43,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function adresses () {
         return $this->hasMany(Address::class);
+    }
+
+    public function payment_methods () {
+        return $this->hasMany(PaymentMethod::class);
     }
 
     public static function rules(): Array {

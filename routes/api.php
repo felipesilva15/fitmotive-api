@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\UserController;
@@ -39,6 +40,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     // Address
     Route::apiResource('/address', AddressController::class);
+
+    // Address
+    Route::apiResource('/payment_method', PaymentMethodController::class);
 
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
