@@ -23,8 +23,7 @@ class PaymentMethod extends Model
     ];
 
     protected $cast = [
-        'type' => PaymentMethodTypeEnum::class,
-        'main' => 'boolean'
+        'type' => PaymentMethodTypeEnum::class
     ];
 
     public function user() {
@@ -35,11 +34,11 @@ class PaymentMethod extends Model
         return [
             'user_id' => 'required|int',
             'type' => ['required', ValidationRule::enum(PaymentMethodTypeEnum::class)],
-            'card_number' => 'required|string|max:21',
+            'card_number' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:21',
             'network_token' => 'string|max:40',
-            'exp_month' => 'required|string|max:2',
-            'exp_year' => 'required|string|max:4',
-            'security_code' => 'required|string|max:3',
+            'exp_month' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:2',
+            'exp_year' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:4',
+            'security_code' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:3',
             'main' => 'boolean'
         ];
     }

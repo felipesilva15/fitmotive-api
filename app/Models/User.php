@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,19 +39,31 @@ class User extends Authenticatable implements JWTSubject
         'payment_methods'
     ];
 
-    public function phones () {
+    public function phones(): HasMany {
         return $this->hasMany(Phone::class);
     }
 
-    public function adresses () {
+    public function phone(): HasOne {
+        return $this->phones()->one()->ofMany('main');
+    }
+
+    public function adresses(): HasMany {
         return $this->hasMany(Address::class);
     }
 
-    public function payment_methods () {
+    public function address(): HasOne {
+        return $this->adresses()->one()->ofMany('main');
+    }
+
+    public function payment_methods(): HasMany {
         return $this->hasMany(PaymentMethod::class);
     }
 
-    public static function rules(): Array {
+    public function payment_method(): HasOne {
+        return $this->payment_methods()->one()->ofMany('main');
+    }
+
+    public static function rules(): array {
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -61,11 +75,11 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    public function getJWTIdentifier() {
+    public function getJWTIdentifier(): mixed {
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims() {
+    public function getJWTCustomClaims(): array {
         return [];
     }
 }
