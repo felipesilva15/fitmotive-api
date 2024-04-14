@@ -31,12 +31,14 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'inactive' => 'boolean'
     ];
 
     protected $with = [
         'phones',
         'adresses',
-        'payment_methods'
+        'payment_methods',
+        'provider'
     ];
 
     public function phones(): HasMany {
@@ -62,6 +64,10 @@ class User extends Authenticatable implements JWTSubject
     public function payment_method(): HasOne {
         return $this->payment_methods()->one()->ofMany('main');
     }
+
+    public function provider(): HasOne {
+        return $this->hasOne(Provider::class);
+    } 
 
     public static function rules(): array {
         return [
