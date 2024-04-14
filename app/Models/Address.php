@@ -25,6 +25,10 @@ class Address extends Model
         'main'
     ];
 
+    protected $casts = [
+        'main' => 'boolean'
+    ];
+
     public function user() {
         return $this->belongsTo(User::class);
     }

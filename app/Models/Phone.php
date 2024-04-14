@@ -21,7 +21,8 @@ class Phone extends Model
     ];
 
     protected $casts = [
-        'type' => PhoneTypeEnum::class
+        'type' => PhoneTypeEnum::class,
+        'main' => 'boolean'
     ];
 
     public function user() {

@@ -23,6 +23,7 @@ class PaymentMethod extends Model
     ];
 
     protected $cast = [
+        'main' => 'boolean',
         'type' => PaymentMethodTypeEnum::class
     ];
 
