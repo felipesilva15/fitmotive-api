@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ProviderController extends Controller
 {
     public function __construct(Provider $model, Request $request) {
-        $this->service = new ProviderService($model, $request);
+        $this->model = $model;
         $this->request = $request;
     }
 }

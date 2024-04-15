@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PaymentMethodController extends Controller
 {
     public function __construct(PaymentMethod $model, Request $request) {
-        $this->service = new PaymentMethodService($model, $request);
+        $this->model = $model;
         $this->request = $request;
     }
 }

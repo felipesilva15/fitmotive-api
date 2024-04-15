@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AddressController extends Controller
 {
     public function __construct(Address $model, Request $request) {
-        $this->service = new AddressService($model, $request);
+        $this->model = $model;
         $this->request = $request;
     }
 }

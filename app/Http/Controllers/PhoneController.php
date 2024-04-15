@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PhoneController extends Controller
 {
     public function __construct(Phone $model, Request $request) {
-        $this->service = new PhoneService($model, $request);
+        $this->model = $model;
         $this->request = $request;
     }
 }
