@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Validation\Rule;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -69,12 +70,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Provider::class);
     } 
 
-    public static function rules(): array {
+    public static function rules(User $user = null): array {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore(isset($user->id) ? $user->id : 0)],
             'password' => 'required|string|min:3',
-            'cpf_cnpj' => 'required|string|unique:users|min:11|max:14',
+            'cpf_cnpj' => ['required', 'string', 'min:11','max:14', Rule::unique('users')->ignore(isset($user->id) ? $user->id : 0)],
             'birth_date' => 'required|date',
             'bank_gateway_id' => 'string|max:60',
             'inactive' => 'boolean'

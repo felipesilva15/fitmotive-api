@@ -64,7 +64,7 @@ class Service
         }
 
         if (method_exists($this->model, 'rules')){
-            $request->validate($this->model::rules());
+            $request->validate($this->model::rules($data));
         }
             
         $data->update($request->all());
