@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethodTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -98,13 +99,17 @@ class User extends Authenticatable implements JWTSubject
             'adresses.*.main' => Address::rules()['main'],
             'payment_methods' => 'nullable|array',
             'payment_methods.*.type' => PaymentMethod::rules()['type'],
-            'payment_methods.*.card_number' => PaymentMethod::rules()['card_number'],
+            'payment_methods.*.card_number' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:21',
             'payment_methods.*.network_token' => PaymentMethod::rules()['network_token'],
-            'payment_methods.*.exp_month' => PaymentMethod::rules()['exp_month'],
-            'payment_methods.*.exp_year' => PaymentMethod::rules()['exp_year'],
-            'payment_methods.*.security_code' => PaymentMethod::rules()['security_code'],
+            'payment_methods.*.exp_month' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:2',
+            'payment_methods.*.exp_year' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:4',
+            'payment_methods.*.security_code' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:3',
             'payment_methods.*.main' => PaymentMethod::rules()['main'],
-            'provider' => 'nullable'
+            'provider' => 'nullable',
+            'provider.plan_id' => 'required_if:provider|int',
+            'provider.profession' => [Rule::enum(ProviderProfessionEnum::class)],
+            'provider.bank_gateway_id' => 'string|max:60',
+            'provider.inactive' => 'required_if:provider|boolean'
         ];
     }
 
