@@ -12,93 +12,41 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    protected $model;
+    protected $service;
     protected $request;
 
     public function index() {
-        $query = $this->model::query();
-        $filters = $this->request->all();
-
-        // Filtros extras além do fillable
-        $othersFillableFields = [];
-
-        // Filtra todos os campos que estão na propriedade fillable da model
-        foreach ($filters as $field => $value) {
-            if (in_array($field, $this->model->getFillable()) || in_array($field, $othersFillableFields)) {
-                if (method_exists($this->model, 'rules')){
-                    if ($this->model::rules()[$field] && str_contains($this->model::rules()[$field], 'string')) {
-                        $query->where($field, 'like', '%'.trim($value).'%');
-                        continue;
-                    }
-                }
-
-                $query->where($field, $value);
-            }
-        }
-
-        $data = $query->get();
+        $data = $this->service->index();
 
         return response()->json($data, 200);
     }
 
     public function show($id) {
-        $data = $this->model::find($id);
-
-        if (!$data) {
-            throw new MasterNotFoundHttpException;
-        }
+        $data = $this->service->show($id);
         
         return response()->json($data, 200);
     }
 
     public function store(Request $request) {
-        if (method_exists($this->model, 'rules')){
-            $request->validate($this->model::rules());
-        }
-        
-        $data = $this->model::create($request->all());
+        $data = $this->service->store($request);
 
         return response()->json($data, 201);
     }
 
     public function update(Request $request, $id) {
-        $data = $this->model::find($id);
-
-        if (!$data) {
-            throw new MasterNotFoundHttpException;
-        }
-
-        if (method_exists($this->model, 'rules')){
-            $request->validate($this->model::rules());
-        }
-            
-        $data->update($request->all());
+        $data = $this->service->update($request, $id);
 
         return response()->json($data, 200);
     }
 
     public function destroy($id) {
-        $data = $this->model::find($id);
-
-        if (!$data) {
-            throw new MasterNotFoundHttpException;
-        }
-
-        $data->delete();
+        $this->service->delete($id);
 
         return response()->json(['message' => 'Registro deletado com sucesso!'], 200);
     }
 
     public function toogleActivation ($id) {
-        $data = $this->model::find($id);
-
-        if (!$data) {
-            throw new MasterNotFoundHttpException;
-        }
-
-        $data->update([
-            'inactive' => !$data->inactive
-        ]);
+        $this->service->toogleActivation($id);
 
         return response()->noContent();
     }
