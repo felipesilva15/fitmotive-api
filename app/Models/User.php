@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PaymentMethodTypeEnum;
+use App\Enums\ProviderProfessionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -40,7 +41,8 @@ class User extends Authenticatable implements JWTSubject
         'phones',
         'adresses',
         'payment_methods',
-        'provider'
+        'provider',
+        'patient'
     ];
 
     public function phones(): HasMany {
@@ -70,6 +72,10 @@ class User extends Authenticatable implements JWTSubject
     public function provider(): HasOne {
         return $this->hasOne(Provider::class);
     } 
+
+    public function patient(): HasOne {
+        return $this->hasOne(Patient::class);
+    }
 
     public static function rules(User $user = null): array {
         return [
@@ -106,10 +112,14 @@ class User extends Authenticatable implements JWTSubject
             'payment_methods.*.security_code' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|string|max:3',
             'payment_methods.*.main' => PaymentMethod::rules()['main'],
             'provider' => 'nullable',
-            'provider.plan_id' => 'required_if:provider|int',
-            'provider.profession' => [Rule::enum(ProviderProfessionEnum::class)],
+            'provider.plan_id' => 'required_with:provider|int',
+            'provider.profession' => ['required_with:provider', Rule::enum(ProviderProfessionEnum::class)],
             'provider.bank_gateway_id' => 'string|max:60',
-            'provider.inactive' => 'required_if:provider|boolean'
+            'provider.inactive' => 'boolean',
+            'patient' => 'nullable',
+            'patient.provider_id' => 'required_with:patient|int',
+            'patient.service_price' => 'required_with:patient|decimal:0,2',
+            'patient.billing_recurrence' => ['required_with:patient', Rule::enum(ProviderProfessionEnum::class)],
         ];
     }
 

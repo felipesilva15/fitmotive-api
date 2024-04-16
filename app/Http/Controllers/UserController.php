@@ -41,6 +41,10 @@ class UserController extends Controller
                 $user->provider()->create($data['provider']);
             }
 
+            if (isset($data['patient'])) {
+                $user->patient()->create($data['patient']);
+            }
+
             return $user;
         });
 

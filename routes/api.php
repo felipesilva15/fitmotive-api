@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PhoneController;
@@ -52,6 +53,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Provider
     Route::apiResource('/provider', ProviderController::class);
+
+    // Patient
+    Route::apiResource('/patient', PatientController::class);
 
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
