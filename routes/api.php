@@ -8,6 +8,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DietController;
 use App\Models\Plan;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriptionService;
@@ -56,6 +57,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
+
+    // Diet
+    Route::apiResource('/diet', DietController::class);
 
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
