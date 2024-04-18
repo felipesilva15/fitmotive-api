@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BillingRecurrenceEnum;
 use App\Enums\PaymentMethodTypeEnum;
 use App\Enums\ProviderProfessionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -119,7 +120,7 @@ class User extends Authenticatable implements JWTSubject
             'patient' => 'nullable',
             'patient.provider_id' => 'required_with:patient|int',
             'patient.service_price' => 'required_with:patient|decimal:0,2',
-            'patient.billing_recurrence' => ['required_with:patient', Rule::enum(ProviderProfessionEnum::class)],
+            'patient.billing_recurrence' => ['required_with:patient', Rule::enum(BillingRecurrenceEnum::class)],
         ];
     }
 
