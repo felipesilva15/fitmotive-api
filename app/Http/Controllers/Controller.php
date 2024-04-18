@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\CrudControllerInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Exceptions\MasterNotFoundHttpException;
 use Illuminate\Http\Request;
 
-class Controller extends BaseController
+class Controller extends BaseController implements CrudControllerInterface
 {
     use AuthorizesRequests, ValidatesRequests;
 
