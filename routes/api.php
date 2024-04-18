@@ -1,5 +1,8 @@
 <?php
 
+use App\Data\System\PatientDTO;
+use App\Data\System\PhoneDTO;
+use App\Helpers\Utils;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PatientController;
@@ -10,7 +13,6 @@ use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
 use App\Models\Plan;
-use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriptionService;
 use Illuminate\Support\Facades\Route;
 
@@ -30,10 +32,6 @@ Route::get('/pagseguro/plan/{id}/sync', function ($id) {
     $response = $service->createPlan($plan);
 
     return response()->json($response, 200);
-});
-
-Route::get('/test', function () {
-    return response()->json(User::withOnly(['phone', 'address', 'payment_method'])->find(1), 200);
 });
 
 Route::group(['middleware' => 'auth:api'], function () {
