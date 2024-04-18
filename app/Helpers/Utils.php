@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use App\Contracts\DtoInterface;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 
 class Utils
 {
@@ -13,19 +15,17 @@ class Utils
         return $formattedValue;
     }
 
-    public static function modelArrayToDtoArray(array $modelArray, string $dtoClass): array {
-        if (!$dtoClass instanceof DtoInterface) {
-            throw new Exception("A classe {$dtoClass} não implementa a interface DtoInterface. Não é possível utilizar o método {DtoInterface::class}");
+    public static function modelCollectionToDtoCollection(Collection $modelCollection, string $dtoClass): SupportCollection {
+        $convertionMethodName = 'fromModel';
+
+        if (!method_exists($dtoClass, $convertionMethodName)) {
+            throw new Exception("A classe {$dtoClass} não possui o método {$convertionMethodName}. Não é possível este método.");
         }
 
-        $dtoArray = [];
-
-        foreach ($modelArray as $model) {
-            $dto = $dtoClass::fromModel($model);
-
-            array_push($dtoArray, $dto);
-        }
+        $dtoCollection = collect($modelCollection)->map(function ($model) use ($dtoClass, $convertionMethodName)  {
+            return $dtoClass::{$convertionMethodName}($model);
+        });
         
-        return $dtoArray; 
+        return $dtoCollection; 
     }
 }
