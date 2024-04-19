@@ -19,7 +19,7 @@ class Utils
         $convertionMethodName = 'fromModel';
 
         if (!method_exists($dtoClass, $convertionMethodName)) {
-            throw new Exception("A classe {$dtoClass} não possui o método {$convertionMethodName}. Não é possível este método.");
+            throw new Exception("A classe {$dtoClass} não possui o método {$convertionMethodName}. Não é possível utilizar este método.");
         }
 
         $dtoCollection = collect($modelCollection)->map(function ($model) use ($dtoClass, $convertionMethodName)  {

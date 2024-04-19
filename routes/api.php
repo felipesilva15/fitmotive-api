@@ -1,8 +1,5 @@
 <?php
 
-use App\Data\System\PatientDTO;
-use App\Data\System\PhoneDTO;
-use App\Helpers\Utils;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PatientController;
