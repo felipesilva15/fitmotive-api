@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Provider
     Route::apiResource('/provider', ProviderController::class);
+    Route::get('/provider/{id}/patients', [ProviderController::class, 'patients']);
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
