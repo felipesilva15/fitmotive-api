@@ -27,6 +27,6 @@ class PagSeguroSubscriptionService
             'bank_gateway_id' => $response->id
         ]);
 
-        return $response;
+        return $plan;
     }
 } 

@@ -9,6 +9,7 @@ use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\PagSeguroSubscriptionController;
 use App\Models\Plan;
 use App\Services\PagSeguro\PagSeguroSubscriptionService;
 use Illuminate\Support\Facades\Route;
@@ -19,19 +20,11 @@ Route::post('/login', [AuthController::class, 'login']);
 // User
 Route::post('/user', [UserController::class, 'store']);
 
-// Plan
-Route::apiResource('/plan', PlanController::class);
-
-Route::get('/pagseguro/plan/{id}/sync', function ($id) {
-    $plan = Plan::find($id);
-
-    $service = new PagSeguroSubscriptionService();
-    $response = $service->createPlan($plan);
-
-    return response()->json($response, 200);
-});
-
 Route::group(['middleware' => 'auth:api'], function () {
+    // Plan
+    Route::apiResource('/plan', PlanController::class);
+    Route::patch('/pagseguro/plan/{id}/sync', [PagSeguroSubscriptionController::class, 'syncPlan']);
+
     // User
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/{id}', [UserController::class, 'show']);
