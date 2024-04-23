@@ -69,27 +69,22 @@ class UserController extends Controller
             throw new CustomValidationException('E-mail não registrado no APP da Fit Motive.');
         }
 
-        $password_reset_token = $user->password_reset_token()->create([
-            'email' => $data['email'],
-            'token' => Str::random(16)
+        $password = Str::random(16);
+
+        $user->update([
+            'password' => $password
         ]);
 
         $body = view('mails.reset-password', [
-            'user' => $user, 'resetLink' => 
-            "http://localhost:8000/api/reset_password_check?token={$password_reset_token->token}"
+            'user' => $user, 
+            'newPassword' => $password
         ])->render();
 
         $emailSender = new EmailSenderService();
-        $emailSender->sendEmail($user->email, 'Redefina sua senha - Fit Motive', $body);
-
-        return response()->json(['message' => 'E-mail enviado!'], 200);
-    }
-
-    public function reset_password_check(Request $request) {
-        $data = $request->validate([
-            'token' => 'required|string'
-        ]);
+        $emailSender->sendEmail($user->email, 'Redefinição de senha - Fit Motive', $body);
 
         
+
+        return response()->json(['message' => 'Senha redefinida!'], 200);
     }
 }

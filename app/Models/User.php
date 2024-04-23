@@ -77,10 +77,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Patient::class);
     }
 
-    public function password_reset_token(): HasOne {
-        return $this->hasOne(PasswordResetToken::class);
-    }
-
     public static function rules(User $user = null): array {
         return [
             'name' => 'required|string|max:255',
