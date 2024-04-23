@@ -7,6 +7,7 @@ use App\Services\System\ProviderService;
 use Illuminate\Http\Request;
 use App\Helpers\Utils;
 use App\Data\System\PatientDTO;
+use App\Exceptions\MasterNotFoundHttpException;
 
 class ProviderController extends Controller
 {

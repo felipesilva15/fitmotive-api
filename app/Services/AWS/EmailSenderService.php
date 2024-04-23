@@ -8,19 +8,15 @@ use Aws\Ses\SesClient;
 class EmailSenderService implements EmailSenderInterface
 {
     private string $sender;
-    private string $configrationSet;
     private string $charSet;
     private string $profile;
-    private string $version;
     private string $region;
 
     public function __construct() {
-        $this->sender = 'felipe.allware@gmail.com';
-        $this->configrationSet = 'ConfigSet';
+        $this->sender = 'fitmotive.pi@gmail.com';
         $this->charSet = 'UTF-8';
         $this->profile = 'default';
-        $this->version = '2010-12-01';
-        $this->region = 'us-west-1';
+        $this->region = 'us-east-1';
     }
 
     public function sendEmail(string $to, string $subject, string $body) {
@@ -37,10 +33,10 @@ class EmailSenderService implements EmailSenderInterface
                 'ToAddresses' => [$to]
             ],
             'ReplyToAddresses' => [$this->sender],
-            'Source',
+            'Source' => $this->sender,
             'Message' => [
                 'Body' => [
-                    'HTML' => [
+                    'Html' => [
                         'Charset' => $this->charSet,
                         'Data' => $body
                     ],
@@ -53,8 +49,7 @@ class EmailSenderService implements EmailSenderInterface
                     'Charset' => $this->charSet,
                     'Data' => $subject
                 ]
-            ],
-            'ConfigurationSetName' => $this->configrationSet
+            ]
         ];
     }
 
@@ -62,11 +57,6 @@ class EmailSenderService implements EmailSenderInterface
         return new SesClient([
             'region' => $this->region,
             'profile' => $this->profile,
-            'version' => $this->version,
-            'credentials' => [
-                'key' => '',
-                'secret' => ''
-            ]
         ]);
     }
 }
