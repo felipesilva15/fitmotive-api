@@ -63,12 +63,13 @@ class UserController extends Controller
             'email' => 'required|email|max:255'
         ]);
 
-        $user = User::where('email', $data['email'])->limit(1)->get()[0];
+        $user = User::where('email', $data['email'])->limit(1)->get();
         
-        if (!$user) {
-            throw new CustomValidationException('E-mail não registrado no APP da Fit Motive.');
+        if (!$user || !count($user)) {
+            throw new CustomValidationException('Infelizmente não encontramos seu e-mail em nossa base. Confira se foi digitado corretamente e tente novamente.');
         }
 
+        $user = $user[0];
         $password = Str::random(16);
 
         $user->update([
@@ -82,8 +83,6 @@ class UserController extends Controller
 
         $emailSender = new EmailSenderService();
         $emailSender->sendEmail($user->email, 'Redefinição de senha - Fit Motive', $body);
-
-        
 
         return response()->json(['message' => 'Senha redefinida!'], 200);
     }

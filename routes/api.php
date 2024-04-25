@@ -22,8 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // User
 Route::post('/user', [UserController::class, 'store']);
 
-Route::patch('reset_password', [UserController::class, 'reset_password']);
-Route::get('reset_password_check', [UserController::class, 'reset_password_check']);
+Route::patch('/user/reset_password', [UserController::class, 'reset_password']);
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Plan
