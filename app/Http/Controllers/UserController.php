@@ -63,33 +63,27 @@ class UserController extends Controller
             'email' => 'required|email|max:255'
         ]);
 
-        $user = User::where('email', $data['email'])->limit(1)->get()[0];
+        $user = User::where('email', $data['email'])->limit(1)->get();
         
-        if (!$user) {
-            throw new CustomValidationException('E-mail não registrado no APP da Fit Motive.');
+        if (!$user || !count($user)) {
+            throw new CustomValidationException('Infelizmente não encontramos seu e-mail em nossa base. Confira se foi digitado corretamente e tente novamente.');
         }
 
-        $password_reset_token = $user->password_reset_token()->create([
-            'email' => $data['email'],
-            'token' => Str::random(16)
+        $user = $user[0];
+        $password = Str::random(16);
+
+        $user->update([
+            'password' => $password
         ]);
 
         $body = view('mails.reset-password', [
-            'user' => $user, 'resetLink' => 
-            "http://localhost:8000/api/reset_password_check?token={$password_reset_token->token}"
+            'user' => $user, 
+            'newPassword' => $password
         ])->render();
 
         $emailSender = new EmailSenderService();
-        $emailSender->sendEmail($user->email, 'Redefina sua senha - Fit Motive', $body);
+        $emailSender->sendEmail($user->email, 'Redefinição de senha - Fit Motive', $body);
 
-        return response()->json(['message' => 'E-mail enviado!'], 200);
-    }
-
-    public function reset_password_check(Request $request) {
-        $data = $request->validate([
-            'token' => 'required|string'
-        ]);
-
-        
+        return response()->json(['message' => 'Senha redefinida!'], 200);
     }
 }

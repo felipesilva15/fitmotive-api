@@ -29,6 +29,8 @@ Route::patch('/user/reset_password', [UserController::class, 'reset_password']);
 // Search CEP
 Route::get('/cep/{cep}', [SearchCepController::class, 'getAddressByCep']);
 
+
+
 Route::group(['middleware' => 'auth:api'], function () {
     // Plan
     Route::apiResource('/plan', PlanController::class);
