@@ -10,6 +10,7 @@ use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\PagSeguroSubscriptionController;
+use App\Http\Controllers\SearchCepController;
 use App\Models\Plan;
 use App\Services\AWS\EmailSenderService;
 use App\Services\PagSeguro\PagSeguroSubscriptionService;
@@ -22,8 +23,11 @@ Route::post('/login', [AuthController::class, 'login']);
 // User
 Route::post('/user', [UserController::class, 'store']);
 
-Route::patch('reset_password', [UserController::class, 'reset_password']);
-Route::get('reset_password_check', [UserController::class, 'reset_password_check']);
+// Reset Password 
+Route::patch('/user/reset_password', [UserController::class, 'reset_password']);
+
+// Search CEP
+Route::get('/cep/{cep}', [SearchCepController::class, 'getAddressByCep']);
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Plan
