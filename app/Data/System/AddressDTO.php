@@ -17,7 +17,7 @@ class AddressDTO extends DataTransferObject
     public string $region;
     public string $region_code;
     public string $number;
-    public string $complement;
+    public string | null $complement;
     public bool $main;
     public string $created_at;
     public string | null $updated_at;

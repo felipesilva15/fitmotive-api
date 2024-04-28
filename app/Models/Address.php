@@ -44,7 +44,7 @@ class Address extends Model
             'region' => 'required|string|max:40',
             'region_code' => 'required|string|max:2',
             'number' => 'required|string|max:6',
-            'complement' => 'string|max:120',
+            'complement' => 'nullable|string|max:120',
             'main' => 'boolean'
         ];
     }

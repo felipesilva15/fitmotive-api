@@ -3,8 +3,13 @@
 namespace App\Data\System;
 
 use App\Enums\BillingRecurrenceEnum;
+use App\Enums\PaymentMethodTypeEnum;
 use App\Helpers\Utils;
+use App\Models\Address;
 use App\Models\Patient;
+use App\Models\PaymentMethod;
+use App\Models\Phone;
+use Illuminate\Validation\Rule;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
 use Spatie\DataTransferObject\Casters\EnumCaster;
@@ -58,7 +63,43 @@ class PatientDTO extends DataTransferObject
         ]);
     }
 
-    public static function rules(): array {
-        return [];
+    public static function rules(PatientDTO $patient = null): array {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore(isset($patient->user_id) ? $patient->user_id : 0)],
+            'cpf_cnpj' => ['required', 'string', 'min:11','max:14', Rule::unique('users')->ignore(isset($patient->user_id) ? $patient->user_id : 0)],
+            'password' => 'string|min:3',
+            'birth_date' => 'required|date',
+            'bank_gateway_id' => 'nullable|string|max:60',
+            'provider_id' => 'required|int',
+            'service_price' => 'required|decimal:0,2',
+            'billing_recurrence' => ['required:', Rule::enum(BillingRecurrenceEnum::class)],
+            'inactive' => 'boolean',
+            'phones' => 'nullable|array',
+            'phones.*.country' => Phone::rules()['country'],
+            'phones.*.ddd' => Phone::rules()['ddd'],
+            'phones.*.number' => Phone::rules()['number'],
+            'phones.*.type' => Phone::rules()['type'],
+            'phones.*.main' => Phone::rules()['main'],
+            'adresses' => 'nullable|array',
+            'adresses.*.name' => Address::rules()['name'],
+            'adresses.*.postal_code' => Address::rules()['postal_code'],
+            'adresses.*.street' => Address::rules()['street'],
+            'adresses.*.locality' => Address::rules()['locality'],
+            'adresses.*.city' => Address::rules()['city'],
+            'adresses.*.region' => Address::rules()['region'],
+            'adresses.*.region_code' => Address::rules()['region_code'],
+            'adresses.*.number' => Address::rules()['number'],
+            'adresses.*.complement' => Address::rules()['complement'],
+            'adresses.*.main' => Address::rules()['main'],
+            'payment_methods' => 'nullable|array',
+            'payment_methods.*.type' => PaymentMethod::rules()['type'],
+            'payment_methods.*.card_number' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:21',
+            'payment_methods.*.network_token' => PaymentMethod::rules()['network_token'],
+            'payment_methods.*.exp_month' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:2',
+            'payment_methods.*.exp_year' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:4',
+            'payment_methods.*.security_code' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:3',
+            'payment_methods.*.main' => PaymentMethod::rules()['main'],
+        ];
     } 
 }
