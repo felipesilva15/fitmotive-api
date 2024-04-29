@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Exceptions\MasterNotFoundHttpException;
+use App\Helpers\Utils;
 use Illuminate\Http\Request;
 
 class Controller extends BaseController implements CrudControllerInterface
@@ -15,6 +16,7 @@ class Controller extends BaseController implements CrudControllerInterface
 
     protected $model;
     protected $request;
+    protected $dto;
 
     public function index() {
         $query = $this->model::query();
@@ -39,6 +41,10 @@ class Controller extends BaseController implements CrudControllerInterface
 
         $data = $query->get();
 
+        if($this->dto && method_exists($this->dto, 'fromModel')) {
+            $data = Utils::modelCollectionToDtoCollection($data, $this->dto);
+        }
+
         return response()->json($data, 200);
     }
 
@@ -47,6 +53,10 @@ class Controller extends BaseController implements CrudControllerInterface
 
         if (!$data) {
             throw new MasterNotFoundHttpException;
+        }
+
+        if($this->dto && method_exists($this->dto, 'fromModel')) {
+            $data = $this->dto::fromModel($data);
         }
         
         return response()->json($data, 200);

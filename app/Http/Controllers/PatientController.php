@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\System\PatientDTO;
+use App\Exceptions\MasterNotFoundHttpException;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\User;
@@ -14,6 +15,7 @@ class PatientController extends Controller
     public function __construct(Patient $model, Request $request) {
         $this->model = $model;
         $this->request = $request;
+        $this->dto = PatientDTO::class;
     }
 
     public function store(Request $request) {
@@ -50,5 +52,17 @@ class PatientController extends Controller
         $data = PatientDTO::fromModel($data);
 
         return response()->json($data, 201);
+    }
+
+    public function destroy($id) {
+        $data = $this->model::find($id);
+
+        if (!$data) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $data->user()->delete();
+
+        return response()->json(['message' => 'Registro deletado com sucesso!'], 200);
     }
 }
