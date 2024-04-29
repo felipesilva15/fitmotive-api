@@ -63,7 +63,7 @@ class PatientDTO extends DataTransferObject
         ]);
     }
 
-    public static function rules(PatientDTO $patient = null): array {
+    public static function rules($patient = null): array {
         return [
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore(isset($patient->user_id) ? $patient->user_id : 0)],

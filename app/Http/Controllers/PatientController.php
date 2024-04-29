@@ -7,7 +7,10 @@ use App\Enums\CrudActionEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Helpers\Utils;
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use App\Models\Patient;
+use App\Models\PaymentMethod;
+use App\Models\Phone;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +72,7 @@ class PatientController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $data = $request->validate(PatientDTO::rules());
+        $data = $request->validate(PatientDTO::rules($request));
         $patient = $this->model::find($id);
 
         if (!$patient) {
@@ -89,21 +92,33 @@ class PatientController extends Controller
         }
 
         DB::transaction(function () use ($patient, $data) {
-            $user = $patient->user()->update();
+            $user = $patient->user()->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'cpf_cnpj' => $data['cpf_cnpj'],
+                'birth_date' => $data['birth_date'],
+                'inactive' => $data['inactive']
+            ]);
 
             if (isset($data['phones'])) {
                 foreach ($data['phones'] as $phone) {
                     switch ($phone['action']) {
                         case CrudActionEnum::Create:
-                            $user->phones()->create($phone);
+                            $patient->user->phones()->create($phone);
                             break;
 
                         case CrudActionEnum::Update:
-                            $user->phones()->update($phone);
+                            Phone::find($phone['id'])->update([
+                                'country' => $phone['country'],
+                                'ddd' => $phone['ddd'],
+                                'number' => $phone['number'],
+                                'type' => $phone['type'],
+                                'main' => $phone['main']
+                            ]);
                             break;
 
                         case CrudActionEnum::Delete:
-                            $user->phones()->detach($phone);
+                            Phone::find($phone['id'])->delete();
                             break;
                     }
                 }
@@ -113,15 +128,26 @@ class PatientController extends Controller
                 foreach ($data['adresses'] as $address) {
                     switch ($address['action']) {
                         case CrudActionEnum::Create:
-                            $user->adresses()->create($address);
+                            $patient->user->adresses()->create($address);
                             break;
 
                         case CrudActionEnum::Update:
-                            $user->adresses()->update($address);
+                            Address::find($address['id'])->update([
+                                'name' => $address['name'],
+                                'postal_code' => $address['postal_code'],
+                                'street' => $address['street'],
+                                'locality' => $address['locality'],
+                                'city' => $address['city'],
+                                'region' => $address['region'],
+                                'region_code' => $address['region_code'],
+                                'number' => $address['number'],
+                                'complement' => $address['complement'],
+                                'main' => $address['main']
+                             ]);
                             break;
 
                         case CrudActionEnum::Delete:
-                            $user->adresses()->detach($address);
+                            Address::find($address['id'])->delete();
                             break;
                     }
                 }
@@ -131,21 +157,31 @@ class PatientController extends Controller
                 foreach ($data['payment_methods'] as $paymentMethod) {
                     switch ($paymentMethod['action']) {
                         case CrudActionEnum::Create:
-                            $user->payment_methods()->create($paymentMethod);
+                             $patient->user->payment_methods()->create($paymentMethod);
                             break;
 
                         case CrudActionEnum::Update:
-                            $user->payment_methods()->update($paymentMethod);
+                            PaymentMethod::find($paymentMethod['id'])->update([
+                                'type' => $paymentMethod['type'],
+                                'card_number' => $paymentMethod['card_number'],
+                                'exp_month' => $paymentMethod['exp_month'],
+                                'exp_year' => $paymentMethod['exp_year'],
+                                'security_code' => $paymentMethod['security_code'],
+                                'main' => $paymentMethod['main']
+                             ]);
                             break;
 
                         case CrudActionEnum::Delete:
-                            $user->payment_methods()->detach($paymentMethod);
+                            PaymentMethod::find($paymentMethod['id'])->delete();
                             break;
                     }
                 }
             }
 
-            $patient->update($data);
+            $patient->update([
+                'service_price' => $data['service_price'],
+                'billing_recurrence' => $data['billing_recurrence']
+            ]);
 
             return $patient;
         });
