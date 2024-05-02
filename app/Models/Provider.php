@@ -6,6 +6,7 @@ use App\Enums\ProviderProfessionEnum;
 use Illuminate\Validation\Rule as ValidationRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -26,12 +27,12 @@ class Provider extends Model
         'inactive' => 'boolean'
     ];
 
-    public function user(): HasOne {
-        return $this->hasOne(User::class);
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
     }
 
-    public function plan(): HasOne {
-        return $this->hasOne(Plan::class);
+    public function plan(): BelongsTo {
+        return $this->belongsTo(Plan::class);
     }
 
     public function patients(): HasMany {

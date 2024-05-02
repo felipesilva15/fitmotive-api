@@ -29,7 +29,8 @@ Route::patch('/user/reset_password', [UserController::class, 'reset_password']);
 // Search CEP
 Route::get('/cep/{cep}', [SearchCepController::class, 'getAddressByCep']);
 
-
+// Provider
+Route::post('/provider', [ProviderController::class, 'store']);
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Plan
@@ -52,7 +53,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/payment_method', PaymentMethodController::class);
 
     // Provider
-    Route::apiResource('/provider', ProviderController::class);
+    Route::get('/provider', [ProviderController::class, 'index']);
+    Route::get('/provider/{id}', [ProviderController::class, 'show']);
+    Route::put('/provider/{id}', [ProviderController::class, 'update']);
+    Route::delete('/provider/{id}', [ProviderController::class, 'destroy']);
     Route::get('/provider/{id}/patients', [ProviderController::class, 'patients']);
 
     // Patient
