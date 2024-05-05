@@ -12,6 +12,7 @@ use App\Http\Controllers\DietController;
 use App\Http\Controllers\PagSeguroPlanController;
 use App\Http\Controllers\PagSeguroSubscriberController;
 use App\Http\Controllers\SearchCepController;
+use App\Http\Controllers\SubscriptionController;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('/provider/{id}', [ProviderController::class, 'update']);
     Route::delete('/provider/{id}', [ProviderController::class, 'destroy']);
     Route::get('/provider/{id}/patients', [ProviderController::class, 'patients']);
+
+    // Subscription
+    Route::apiResource('/subscription', SubscriptionController::class);
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
