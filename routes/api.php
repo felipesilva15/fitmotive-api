@@ -1,5 +1,6 @@
 <?php
 
+use App\Data\PagSeguro\Request\SubscriptionDTO;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PatientController;
@@ -11,8 +12,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\PagSeguroPlanController;
 use App\Http\Controllers\PagSeguroSubscriberController;
+use App\Http\Controllers\PagSeguroSubscriptionController;
 use App\Http\Controllers\SearchCepController;
 use App\Http\Controllers\SubscriptionController;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +65,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Subscription
     Route::apiResource('/subscription', SubscriptionController::class);
+    Route::patch('/pagseguro/subscription/{id}/sync', [PagSeguroSubscriptionController::class, 'sync']);
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
