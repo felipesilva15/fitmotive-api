@@ -5,11 +5,11 @@ namespace App\Data\PagSeguro\Request;
 use App\Enums\PaymentMethodTypeEnum;
 use App\Helpers\Utils;
 use App\Models\User;
-use Spatie\DataTransferObject\Attributes\MapFrom;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class SubscriberDTO extends DataTransferObject
 {
+    public string $reference_id;
     public string $name;
     public string $email;
     public string $tax_id;
@@ -20,6 +20,7 @@ class SubscriberDTO extends DataTransferObject
 
     public static function fromModel(User $model) {
         return new self([
+            'reference_id' => (string) $model->id,
             'name' => $model->name,
             'email' => $model->email,
             'tax_id' => $model->cpf_cnpj,
