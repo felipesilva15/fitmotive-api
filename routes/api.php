@@ -9,12 +9,11 @@ use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
-use App\Http\Controllers\PagSeguroSubscriptionController;
+use App\Http\Controllers\PagSeguroPlanController;
+use App\Http\Controllers\PagSeguroSubscriberController;
 use App\Http\Controllers\SearchCepController;
-use App\Models\Plan;
-use App\Services\AWS\EmailSenderService;
-use App\Services\PagSeguro\PagSeguroSubscriptionService;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
 
 // Auth
@@ -35,13 +34,14 @@ Route::post('/provider', [ProviderController::class, 'store']);
 Route::group(['middleware' => 'auth:api'], function () {
     // Plan
     Route::apiResource('/plan', PlanController::class);
-    Route::patch('/pagseguro/plan/{id}/sync', [PagSeguroSubscriptionController::class, 'syncPlan']);
+    Route::patch('/pagseguro/plan/{id}/sync', [PagSeguroPlanController::class, 'sync']);
 
     // User
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
+    Route::patch('/pagseguro/subscriber/{id}/sync', [PagSeguroSubscriberController::class, 'sync']);
 
     // Phone
     Route::apiResource('/phone', PhoneController::class);

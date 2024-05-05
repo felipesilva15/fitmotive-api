@@ -13,20 +13,7 @@ class PagSeguroSubscriptionService
     private PagSeguroApiService $api;
 
     public function  __construct() {
-        $this->baseUrl = env('PAGSEGURO_API_SUBSCRIPTION_BASE_URL', '');
+        $this->baseUrl = env('PAGSEGURO_API_SUBSCRIPTION_BASE_URL', '').'/subscriptions';
         $this->api = new PagSeguroApiService();
-    }
-
-    public function createPlan (Plan $plan) {
-        $url = "{$this->baseUrl}/plans";
-        $body = PlanDTO::fromPlan($plan)->toArray();
-
-        $response = $this->api->request($url, HttpMethodEnum::POST, $body, SimpleResponseDTO::class);
-
-        $plan->update([
-            'bank_gateway_id' => $response->id
-        ]);
-
-        return $plan;
     }
 } 
