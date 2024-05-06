@@ -38,6 +38,9 @@ Route::get('/cep/{cep}', [SearchCepController::class, 'getAddressByCep']);
 Route::post('/provider', [ProviderController::class, 'store']);
 
 Route::group(['middleware' => 'auth:api'], function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+
     // Plan
     Route::apiResource('/plan', PlanController::class);
     Route::patch('/pagseguro/plan/{id}/sync', [PagSeguroPlanController::class, 'sync']);
