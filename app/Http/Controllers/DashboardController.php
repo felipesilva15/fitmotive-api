@@ -14,6 +14,9 @@ class DashboardController extends Controller
     public function index() {
         $user = auth()->user();
 
+        $currentMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
+        $lastMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->subMonth()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
+
         $data = [
             "patients" => [
                 "count" => $user->provider->patients->count(),
@@ -21,7 +24,8 @@ class DashboardController extends Controller
                 //"data" => Utils::modelCollectionToDtoCollection($user->provider->patients, PatientDTO::class)
             ],
             "monthly_profit" => [
-                'amount' => $user->financial_transactions()->whereMonth('transaction_date', now()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount'),
+                'amount' => $currentMonthProfit,
+                'percent' => $lastMonthProfit != 0 ? 100 / $lastMonthProfit * ($currentMonthProfit - $lastMonthProfit) : 0
             ],
             "pending_profit" => []
         ];
