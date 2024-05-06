@@ -3,6 +3,7 @@
 use App\Data\PagSeguro\Request\SubscriptionDTO;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PlanController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\FinancialTransactionController;
 use App\Http\Controllers\PagSeguroPlanController;
 use App\Http\Controllers\PagSeguroSubscriberController;
 use App\Http\Controllers\PagSeguroSubscriptionController;
@@ -69,6 +71,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
+
+    // Financial Transaction
+    Route::apiResource('/financial_transaction', FinancialTransactionController::class);
 
     // Diet
     Route::apiResource('/diet', DietController::class);
