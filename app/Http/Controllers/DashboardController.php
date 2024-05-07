@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\System\PatientDTO;
 use App\Enums\MovementTypeEnum;
-use App\Helpers\Utils;
-use App\Models\FinancialTransaction;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Enums\PaymentStatusEnum;
 
 class DashboardController extends Controller
 {
@@ -16,6 +12,9 @@ class DashboardController extends Controller
 
         $currentMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
         $lastMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->subMonth()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
+
+        $pendingProfit = $user->provider->charges()->where('payment_status', '<>',PaymentStatusEnum::Paid)->get()->sum('amount');
+        $totalProfit = $user->provider->charges()->get()->sum('amount');
 
         $data = [
             "patients" => [
@@ -27,7 +26,10 @@ class DashboardController extends Controller
                 'amount' => $currentMonthProfit,
                 'percent' => $lastMonthProfit != 0 ? 100 / $lastMonthProfit * ($currentMonthProfit - $lastMonthProfit) : 0
             ],
-            "pending_profit" => []
+            "pending_profit" => [
+                'amount' => $pendingProfit,
+                'percent' => $totalProfit != 0 ? 100 / $totalProfit * $pendingProfit : 0
+            ]
         ];
 
         return response()->json($data, 200);
