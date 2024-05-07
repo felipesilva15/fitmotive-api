@@ -3,6 +3,7 @@
 use App\Data\PagSeguro\Request\SubscriptionDTO;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChargeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PaymentMethodController;
@@ -74,6 +75,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
+
+    // Charge
+    Route::apiResource('/charge', ChargeController::class);
 
     // Financial Transaction
     Route::apiResource('/financial_transaction', FinancialTransactionController::class);

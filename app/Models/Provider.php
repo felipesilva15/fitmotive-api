@@ -39,6 +39,10 @@ class Provider extends Model
         return $this->hasMany(Patient::class);
     }
 
+    public function charges(): HasMany {
+        return $this->hasMany(Charge::class);
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',

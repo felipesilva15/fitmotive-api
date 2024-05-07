@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\MovementTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Validation\Rule;
 
 class FinancialTransaction extends Model
@@ -26,6 +27,10 @@ class FinancialTransaction extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function charge(): HasOne {
+        return $this->hasOne(Charge::class);
     }
 
     public static function rules(): array {

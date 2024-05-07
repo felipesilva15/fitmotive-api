@@ -6,6 +6,7 @@ use App\Enums\BillingRecurrenceEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,10 @@ class Patient extends Model
 
     public function provider(): BelongsTo {
         return $this->belongsTo(Provider::class);
+    }
+
+    public function charges(): HasMany {
+        return $this->hasMany(Charge::class);
     }
 
     public static function rules(): array {
