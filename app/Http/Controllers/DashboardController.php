@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -17,11 +18,43 @@ class DashboardController extends Controller
         $pendingProfit = $user->provider->charges()->where('payment_status', '<>',PaymentStatusEnum::Paid)->get()->sum('amount');
         $totalProfit = $user->provider->charges()->get()->sum('amount');
 
+        $patients = $user->provider->patients->sortBy('created_at');
+
+        $patients = collect($patients)->map(function($patient) {
+            $patient->created_at = $patient->created_at->format('Y-m');
+
+            return $patient;
+        });
+
+        $patientsChartData = [
+            'months' => [],
+            'total' => [],
+            'new' => []
+        ];
+
+        $patientsCount = 0;
+
+        for ($i=11; $i >= 0; $i--) { 
+            $baseDate = now()->subMonths($i);
+
+            // $patientsCount += $user->provider->patients()->whereMonth('created_at', '<=', $baseDate->month)->whereYear('created_at', '<=', $baseDate->year)->get()->count();
+
+            array_push($patientsChartData['months'], ucwords($baseDate->format('F/Y')));
+            array_push($patientsChartData['total'], $user->provider->patients()->whereMonth('created_at', '<=', $baseDate->month)->whereYear('created_at', '<=', $baseDate->year)->get()->count());
+            array_push($patientsChartData['new'], $user->provider->patients()->whereMonth('created_at', $baseDate->month)->whereYear('created_at', $baseDate->year)->get()->count());
+        }
+
+        // foreach ($patients->groupBy('created_at') as $date => $groupedData) {
+        //     $patientsCount += $groupedData->count();
+        //     array_push($patientsChartData['total'], $patientsCount);
+        //     array_push($patientsChartData['new'], $user->provider->patients()->whereMonth('created_at', ));
+        // }
+
         $data = [
             "patients" => [
                 "count" => $user->provider->patients->count(),
                 "new_this_month" => $user->provider->patients()->whereMonth('created_at', now()->month)->count(),
-                //"data" => Utils::modelCollectionToDtoCollection($user->provider->patients, PatientDTO::class)
+                "overview_chart_data" => $patientsChartData
             ],
             "monthly_profit" => [
                 'amount' => $currentMonthProfit,
