@@ -65,7 +65,7 @@ class ProviderController extends Controller
 
         $data = Utils::modelCollectionToDtoCollection($provider->patients, PatientDTO::class);
 
-        return response()->json($data, 200);
+        return response()->json($data->sortByDesc('id')->values()->all(), 200);
     }
 
     public function charges(int $id) {
@@ -77,6 +77,6 @@ class ProviderController extends Controller
 
         $data = Utils::modelCollectionToDtoCollection($provider->charges, ChargeDTO::class);
 
-        return response()->json($data, 200);
+        return response()->json($data->sortByDesc('id')->values()->all(), 200);
     }
 }

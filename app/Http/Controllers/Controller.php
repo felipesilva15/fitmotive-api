@@ -39,6 +39,8 @@ class Controller extends BaseController implements CrudControllerInterface
             }
         }
 
+        $query->orderBy('id', 'desc');
+
         $data = $query->get();
 
         if($this->dto && method_exists($this->dto, 'fromModel')) {
