@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\System\ChargeDTO;
 use App\Models\Provider;
 use App\Services\System\ProviderService;
 use Illuminate\Http\Request;
@@ -63,6 +64,18 @@ class ProviderController extends Controller
         }
 
         $data = Utils::modelCollectionToDtoCollection($provider->patients, PatientDTO::class);
+
+        return response()->json($data, 200);
+    }
+
+    public function charges(int $id) {
+        $provider = Provider::find($id);
+
+        if (!$provider) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $data = Utils::modelCollectionToDtoCollection($provider->charges, ChargeDTO::class);
 
         return response()->json($data, 200);
     }

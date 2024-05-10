@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('/provider/{id}', [ProviderController::class, 'update']);
     Route::delete('/provider/{id}', [ProviderController::class, 'destroy']);
     Route::get('/provider/{id}/patients', [ProviderController::class, 'patients']);
+    Route::get('/provider/{id}/charges', [ProviderController::class, 'charges']);
 
     // Subscription
     Route::apiResource('/subscription', SubscriptionController::class);

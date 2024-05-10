@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -32,23 +31,13 @@ class DashboardController extends Controller
             'new' => []
         ];
 
-        $patientsCount = 0;
-
         for ($i=11; $i >= 0; $i--) { 
             $baseDate = now()->subMonths($i);
-
-            // $patientsCount += $user->provider->patients()->whereMonth('created_at', '<=', $baseDate->month)->whereYear('created_at', '<=', $baseDate->year)->get()->count();
 
             array_push($patientsChartData['months'], ucwords($baseDate->format('F/Y')));
             array_push($patientsChartData['total'], $user->provider->patients()->whereMonth('created_at', '<=', $baseDate->month)->whereYear('created_at', '<=', $baseDate->year)->get()->count());
             array_push($patientsChartData['new'], $user->provider->patients()->whereMonth('created_at', $baseDate->month)->whereYear('created_at', $baseDate->year)->get()->count());
         }
-
-        // foreach ($patients->groupBy('created_at') as $date => $groupedData) {
-        //     $patientsCount += $groupedData->count();
-        //     array_push($patientsChartData['total'], $patientsCount);
-        //     array_push($patientsChartData['new'], $user->provider->patients()->whereMonth('created_at', ));
-        // }
 
         $data = [
             "patients" => [
