@@ -1,5 +1,6 @@
 <?php
 
+use App\Data\PagSeguro\Request\OrderDTO;
 use App\Data\PagSeguro\Request\SubscriptionDTO;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\PagSeguroSubscriberController;
 use App\Http\Controllers\PagSeguroSubscriptionController;
 use App\Http\Controllers\SearchCepController;
 use App\Http\Controllers\SubscriptionController;
+use App\Models\Charge;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
@@ -41,6 +43,16 @@ Route::post('/provider', [ProviderController::class, 'store']);
 // Plan
 Route::get('/plan', [PlanController::class, 'index']);
 Route::get('/plan/{id}', [PlanController::class, 'show']);
+
+Route::get('/test/{id}', function($id) {
+    $model = Charge::find($id);
+
+    //dd($model->patient->user->payment_method);
+
+    $data = OrderDTO::fromModel($model);
+
+    return response()->json($data, 200);
+});
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Dashboard
