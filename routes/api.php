@@ -38,12 +38,18 @@ Route::get('/cep/{cep}', [SearchCepController::class, 'getAddressByCep']);
 // Provider
 Route::post('/provider', [ProviderController::class, 'store']);
 
+// Plan
+Route::get('/plan', [PlanController::class, 'index']);
+Route::get('/plan/{id}', [PlanController::class, 'show']);
+
 Route::group(['middleware' => 'auth:api'], function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
     // Plan
-    Route::apiResource('/plan', PlanController::class);
+    Route::post('/plan', [PlanController::class, 'store']);
+    Route::put('/plan/{id}', [PlanController::class, 'update']);
+    Route::delete('/plan/{id}', [PlanController::class, 'destroy']);
     Route::patch('/pagseguro/plan/{id}/sync', [PagSeguroPlanController::class, 'sync']);
 
     // User
