@@ -14,6 +14,7 @@ use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
 use App\Http\Controllers\FinancialTransactionController;
+use App\Http\Controllers\PagSeguroOrderController;
 use App\Http\Controllers\PagSeguroPlanController;
 use App\Http\Controllers\PagSeguroSubscriberController;
 use App\Http\Controllers\PagSeguroSubscriptionController;
@@ -43,16 +44,6 @@ Route::post('/provider', [ProviderController::class, 'store']);
 // Plan
 Route::get('/plan', [PlanController::class, 'index']);
 Route::get('/plan/{id}', [PlanController::class, 'show']);
-
-Route::get('/test/{id}', function($id) {
-    $model = Charge::find($id);
-
-    //dd($model->patient->user->payment_method);
-
-    $data = OrderDTO::fromModel($model);
-
-    return response()->json($data, 200);
-});
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Dashboard
@@ -97,6 +88,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Charge
     Route::apiResource('/charge', ChargeController::class);
+    Route::patch('/pagseguro/charge/{id}/sync', [PagSeguroOrderController::class, 'sync']);
 
     // Financial Transaction
     Route::apiResource('/financial_transaction', FinancialTransactionController::class);

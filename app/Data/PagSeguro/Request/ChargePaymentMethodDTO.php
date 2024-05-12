@@ -8,8 +8,11 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class ChargePaymentMethodDTO extends DataTransferObject
 {
-    public string | null $type;
+    public string $type;
+    public int $installments;
+    public string $soft_descriptor;
     public PaymentCardDTO | null $card;
+    public object | null $boleto;
 
     public static function fromModel(PaymentMethod $model) {
         return new self([
