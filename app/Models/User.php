@@ -39,9 +39,6 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $with = [
-        'phones',
-        'adresses',
-        'payment_methods',
         'provider'
     ];
 

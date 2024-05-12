@@ -13,6 +13,7 @@ use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\FinancialTransactionController;
 use App\Http\Controllers\PagSeguroOrderController;
 use App\Http\Controllers\PagSeguroPlanController;
@@ -100,4 +101,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refresh']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    // Reports
+    Route::get('/reports/financial/defaulters', [FinancialReportController::class, 'defaulters']);
 });
