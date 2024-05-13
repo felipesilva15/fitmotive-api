@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -36,6 +37,24 @@ class FinancialReportController extends Controller
                                                 ->where('due_date', '<', now());
                                 }], 'due_date')
                                 ->get();
+
+        return response()->json($data, 200);
+    }
+
+    public function dashboard() {
+        $user = auth()->user();
+
+        $inflows = $user->financial_transactions()->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
+        $outflows = $user->financial_transactions()->where('movement_type', MovementTypeEnum::Debit->value)->get()->sum('amount');
+        $pending = $user->provider->charges()->where('payment_status', '<>',PaymentStatusEnum::Paid)->get()->sum('amount');
+        $balance = $inflows - $outflows;
+
+        $data = [
+            'inflows' => $inflows,
+            'outflows' => $outflows,
+            'pending' => $pending,
+            'balance' => $balance
+        ];
 
         return response()->json($data, 200);
     }

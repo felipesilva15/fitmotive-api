@@ -104,4 +104,5 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Reports
     Route::get('/reports/financial/defaulters', [FinancialReportController::class, 'defaulters']);
+    Route::get('/reports/financial/dashboard', [FinancialReportController::class, 'dashboard']);
 });
