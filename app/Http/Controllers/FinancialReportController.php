@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentMethodTypeEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -62,13 +63,23 @@ class FinancialReportController extends Controller
             array_push($inOutChartData['inflows'], $user->financial_transactions()->whereMonth('transaction_date', $baseDate->month)->whereYear('transaction_date', $baseDate->year)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount'));
             array_push($inOutChartData['outflows'], $user->financial_transactions()->whereMonth('transaction_date', $baseDate->month)->whereYear('transaction_date', $baseDate->year)->where('movement_type', MovementTypeEnum::Debit->value)->get()->sum('amount'));
         }
+        
+        $paymentMethodsMostUsed = [
+            'payment_methods' => PaymentMethodTypeEnum::cases(),
+            'count' => []
+        ];
+
+        foreach ($paymentMethodsMostUsed['payment_methods'] as $paymentMethod) {
+            array_push($paymentMethodsMostUsed['count'], $user->provider->charges()->where('payment_method', $paymentMethod)->get()->count());
+        }
 
         $data = [
             'inflows' => $inflows,
             'outflows' => $outflows,
             'pending' => $pending,
             'balance' => $balance,
-            'in_out_chart_data' => $inOutChartData
+            'in_out_chart_data' => $inOutChartData,
+            'payment_methods_most_used' => $paymentMethodsMostUsed
         ];
 
         return response()->json($data, 200);

@@ -26,6 +26,7 @@ use App\Models\Subscription;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
+use App\Enums\PaymentMethodTypeEnum;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
