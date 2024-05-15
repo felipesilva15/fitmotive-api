@@ -79,4 +79,16 @@ class ProviderController extends Controller
 
         return response()->json($data->sortByDesc('id')->values()->all(), 200);
     }
+
+    public function financialTransactions(int $id) {
+        $provider = Provider::find($id);
+
+        if (!$provider) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $data = $provider->user->financial_transactions;
+
+        return response()->json($data->sortBy('transaction_date')->values()->all(), 200);
+    }
 }
