@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Utils;
 use App\Data\System\PatientDTO;
 use App\Data\System\ProviderDTO;
+use App\Enums\MovementTypeEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -80,15 +81,37 @@ class ProviderController extends Controller
         return response()->json($data->sortByDesc('id')->values()->all(), 200);
     }
 
-    public function financialTransactions(int $id) {
+    public function financialTransactions(int $id, Request $request) {
         $provider = Provider::find($id);
 
         if (!$provider) {
             throw new MasterNotFoundHttpException;
         }
 
-        $data = $provider->user->financial_transactions;
+        $transactions = $provider->user->financial_transactions()
+                                        ->orderBy('transaction_date')
+                                        ->get();
 
-        return response()->json($data->sortBy('transaction_date')->values()->all(), 200);
+        $credit = $transactions->sum(function($transaction) {
+            return $transaction->movement_type == MovementTypeEnum::Credit->value ? $transaction->amount : 0;
+        });
+
+        $debit = $transactions->sum(function($transaction) {
+            return $transaction->movement_type == MovementTypeEnum::Debit->value ? $transaction->amount : 0;
+        });
+
+        $currentBalance = $credit - $debit;
+
+        $data = [
+            'data' => $transactions,
+            'totalizers' => [
+                'previous_balance' => 0,
+                'credit' => $credit,
+                'debit' => $debit,
+                'current_balance' => $currentBalance
+            ]
+        ];
+
+        return response()->json($data, 200);
     }
 }
