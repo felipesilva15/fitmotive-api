@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Data\System\PatientDTO;
 use App\Enums\CrudActionEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Helpers\Utils;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\Charge;
 use App\Models\Patient;
 use App\Models\PaymentMethod;
 use App\Models\Phone;
@@ -190,5 +192,29 @@ class PatientController extends Controller
         $data = PatientDTO::fromModel($data);
 
         return response()->json($data, 201);
+    }
+
+    public function generateCharge(int $id, Request $request) {
+        $patient = $this->model::find($id);
+
+        if (!$patient) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $request->validate([
+            'due_date' => 'required|date'
+        ]);
+
+        $data = Charge::create([
+            'provider_id' => auth()->user()->provider->id,
+            'patient_id' => $patient->id,
+            'description' => 'Cobrança gerada automaticamente',
+            'payment_method' => $patient->user->payment_method->type,
+            'due_date' => $request->due_date,
+            'amount' => $patient->service_price,
+            'payment_status' => PaymentStatusEnum::Waiting
+        ]);
+
+        return response()->json($data, 200);
     }
 }

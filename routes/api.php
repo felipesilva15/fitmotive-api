@@ -88,6 +88,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Patient
     Route::apiResource('/patient', PatientController::class);
+    Route::post('/patient/{id}/generate_charge', [PatientController::class, 'generateCharge']);
 
     // Charge
     Route::apiResource('/charge', ChargeController::class);
