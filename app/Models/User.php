@@ -78,6 +78,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(FinancialTransaction::class);
     }
 
+    public function logs(): HasMany {
+        return $this->hasMany(Log::class);
+    }
+
     public static function rules(User $user = null): array {
         return [
             'name' => 'required|string|max:255',

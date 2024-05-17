@@ -21,6 +21,7 @@ use App\Http\Controllers\PagSeguroSubscriberController;
 use App\Http\Controllers\PagSeguroSubscriptionController;
 use App\Http\Controllers\SearchCepController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\LogController;
 use App\Models\Charge;
 use App\Models\Subscription;
 use App\Models\User;
@@ -108,4 +109,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Reports
     Route::get('/reports/financial/defaulters', [FinancialReportController::class, 'defaulters']);
     Route::get('/reports/financial/dashboard', [FinancialReportController::class, 'dashboard']);
+
+    // Logs
+    Route::apiResource('/log', LogController::class);
 });
