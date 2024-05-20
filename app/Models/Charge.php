@@ -7,6 +7,7 @@ use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Validation\Rule;
 
@@ -44,6 +45,10 @@ class Charge extends Model
 
     public function financial_transaction(): HasOne {
         return $this->hasOne(FinancialTransaction::class);
+    }
+
+    public function charge_links(): HasMany {
+        return $this->hasMany(ChargeLink::class);
     }
 
     public static function label(): string {

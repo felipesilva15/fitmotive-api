@@ -28,6 +28,7 @@ use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
 use App\Enums\PaymentMethodTypeEnum;
+use App\Http\Controllers\ChargeLinkController;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
@@ -94,6 +95,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Charge
     Route::apiResource('/charge', ChargeController::class);
     Route::patch('/pagseguro/charge/{id}/sync', [PagSeguroOrderController::class, 'sync']);
+
+    // Charge link
+    Route::apiResource('/charge_link', ChargeLinkController::class);
 
     // Financial Transaction
     Route::apiResource('/financial_transaction', FinancialTransactionController::class);
