@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\System\PatientDTO;
 use App\Enums\CrudActionEnum;
+use App\Enums\LogActionEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Helpers\Utils;
@@ -14,6 +15,7 @@ use App\Models\Patient;
 use App\Models\PaymentMethod;
 use App\Models\Phone;
 use App\Models\User;
+use App\Services\System\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -52,6 +54,8 @@ class PatientController extends Controller
 
             $patient = $user->patient()->create($data);
 
+            LogService::log('Cadastro de paciente (ID '.$patient->id.')', LogActionEnum::Create);
+
             return $patient;
         });
 
@@ -69,6 +73,8 @@ class PatientController extends Controller
         }
 
         $data->user()->delete();
+
+        LogService::log('Exclusão de paciente (ID '.$data->id.')', LogActionEnum::Update);
 
         return response()->json(['message' => 'Registro deletado com sucesso!'], 200);
     }
@@ -185,6 +191,8 @@ class PatientController extends Controller
                 'billing_recurrence' => $data['billing_recurrence']
             ]);
 
+            LogService::log('Atualização de paciente (ID '.$patient->id.')', LogActionEnum::Update);
+
             return $patient;
         });
 
@@ -214,6 +222,8 @@ class PatientController extends Controller
             'amount' => $patient->service_price,
             'payment_status' => PaymentStatusEnum::Waiting
         ]);
+
+        LogService::log('Geração de cobrança (ID '.$data->id.')', LogActionEnum::Create);
 
         return response()->json($data, 200);
     }

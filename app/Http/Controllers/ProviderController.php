@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use App\Helpers\Utils;
 use App\Data\System\PatientDTO;
 use App\Data\System\ProviderDTO;
+use App\Enums\LogActionEnum;
 use App\Enums\MovementTypeEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Models\User;
+use App\Services\System\LogService;
 use Illuminate\Support\Facades\DB;
 
 class ProviderController extends Controller
@@ -47,6 +49,8 @@ class ProviderController extends Controller
             }
 
             $provider = $user->provider()->create($data);
+
+            LogService::log('Cadastro de prestador (ID '.$provider->id.')', LogActionEnum::Create);
 
             return $provider;
         });

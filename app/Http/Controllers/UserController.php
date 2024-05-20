@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LogActionEnum;
 use App\Exceptions\CustomValidationException;
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use App\Services\AWS\EmailSenderService;
+use App\Services\System\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -50,6 +52,8 @@ class UserController extends Controller
                 $user->patient()->create($data['patient']);
             }
 
+            LogService::log('Cadastro de usuário (ID '.$user->id.')', LogActionEnum::Create);
+
             return $user;
         });
 
@@ -83,6 +87,8 @@ class UserController extends Controller
 
         $emailSender = new EmailSenderService();
         $emailSender->sendEmail($user->email, 'Redefinição de senha - Fit Motive', $body);
+
+        LogService::log('Reset de senha (ID '.$user->id.')', LogActionEnum::Other);
 
         return response()->json(['message' => 'Senha redefinida!'], 200);
     }

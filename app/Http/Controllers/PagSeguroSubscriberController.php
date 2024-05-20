@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LogActionEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Models\Plan;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
+use App\Services\System\LogService;
 
 class PagSeguroSubscriberController extends Controller
 {
@@ -24,6 +26,8 @@ class PagSeguroSubscriberController extends Controller
         }
 
         $response = $this->service->create($user);
+
+        LogService::log('Registro de assinante no PagSeguro (ID '.$user->id.')', LogActionEnum::Other);
 
         return response()->json($response, 200);
     }
