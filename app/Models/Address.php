@@ -33,6 +33,10 @@ class Address extends Model
         return $this->belongsTo(User::class);
     }
 
+    public static function label(): string {
+        return 'endereço';
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',

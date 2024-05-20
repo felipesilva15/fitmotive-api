@@ -31,6 +31,10 @@ class PaymentMethod extends Model
         return $this->belongsTo(User::class);
     }
 
+    public static function label(): string {
+        return 'método de pagamento';
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',

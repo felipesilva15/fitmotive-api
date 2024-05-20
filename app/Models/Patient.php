@@ -37,6 +37,10 @@ class Patient extends Model
         return $this->hasMany(Charge::class);
     }
 
+    public static function label(): string {
+        return 'paciente';
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',

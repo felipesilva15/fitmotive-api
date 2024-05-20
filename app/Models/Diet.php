@@ -20,6 +20,10 @@ class Diet extends Model
         return $this->belongsTo(Provider::class);
     }
 
+    public static function label(): string {
+        return 'dieta';
+    }
+
     public static function rules(): array {
         return [
             'provider_id' => 'required|int',

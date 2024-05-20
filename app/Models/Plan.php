@@ -25,6 +25,10 @@ class Plan extends Model
         'billing_interval' => PlanBillingIntervalEnum::class
     ];
 
+    public static function label(): string {
+        return 'plano';
+    }
+
     public static function rules(): array {
         return [
             'name' => 'required|string|max:255',

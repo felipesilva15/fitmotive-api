@@ -33,6 +33,10 @@ class FinancialTransaction extends Model
         return $this->hasOne(Charge::class);
     }
 
+    public static function label(): string {
+        return 'transação financeira';
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',

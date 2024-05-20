@@ -82,6 +82,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Log::class);
     }
 
+    public static function label(): string {
+        return 'usuário';
+    }
+
     public static function rules(User $user = null): array {
         return [
             'name' => 'required|string|max:255',

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\CrudControllerInterface;
+use App\Enums\LogActionEnum;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Helpers\Utils;
+use App\Services\System\LogService;
 use Illuminate\Http\Request;
 
 class Controller extends BaseController implements CrudControllerInterface
@@ -71,6 +73,10 @@ class Controller extends BaseController implements CrudControllerInterface
         
         $data = $this->model::create($request->all());
 
+        if (method_exists($this->model, 'label')) {
+            LogService::log('Cadastro de '.$this->model::label().' (ID '.$data->id.')', LogActionEnum::Create);
+        }
+
         return response()->json($data, 201);
     }
 
@@ -87,6 +93,10 @@ class Controller extends BaseController implements CrudControllerInterface
             
         $data->update($request->all());
 
+        if (method_exists($this->model, 'label')){
+            LogService::log('Atualização de '.$this->model::label().' (ID '.$data->id.')', LogActionEnum::Update);
+        }
+
         return response()->json($data, 200);
     }
 
@@ -98,6 +108,10 @@ class Controller extends BaseController implements CrudControllerInterface
         }
 
         $data->delete();
+
+        if (method_exists($this->model, 'label')){
+            LogService::log('Exclusão de '.$this->model::label().' (ID '.$data->id.')', LogActionEnum::Delete);
+        }
 
         return response()->json(['message' => 'Registro deletado com sucesso!'], 200);
     }

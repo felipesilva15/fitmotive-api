@@ -46,6 +46,10 @@ class Charge extends Model
         return $this->hasOne(FinancialTransaction::class);
     }
 
+    public static function label(): string {
+        return 'cobrança';
+    }
+
     public static function rules(): array {
         return [
             'provider_id' => 'required|int',

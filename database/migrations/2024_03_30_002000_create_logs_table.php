@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('description', 254);
             $table->enum('action', ['CREATE', 'READ', 'UPDATE', 'DELETE', 'OTHER']);
+            $table->dateTime('date');
             $table->timestamps();
         });
     }

@@ -26,6 +26,10 @@ class Log extends Model
         return $this->belongsTo(User::class);
     } 
 
+    public static function label(): string {
+        return 'log';
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',

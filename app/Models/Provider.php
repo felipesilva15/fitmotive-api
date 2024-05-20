@@ -43,6 +43,10 @@ class Provider extends Model
         return $this->hasMany(Charge::class);
     }
 
+    public static function label(): string {
+        return 'prestador';
+    }
+
     public static function rules(): array {
         return [
             'user_id' => 'required|int',
