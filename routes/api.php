@@ -83,6 +83,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/provider/{id}/patients', [ProviderController::class, 'patients']);
     Route::get('/provider/{id}/charges', [ProviderController::class, 'charges']);
     Route::get('/provider/{id}/financial_transactions', [ProviderController::class, 'financialTransactions']);
+    Route::get('/provider/{id}/logs', [ProviderController::class, 'logs']);
 
     // Subscription
     Route::apiResource('/subscription', SubscriptionController::class);

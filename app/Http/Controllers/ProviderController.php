@@ -118,4 +118,25 @@ class ProviderController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function logs(int $id) {
+        $provider = Provider::find($id);
+
+        if (!$provider) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $data = $provider->user->logs()->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get();
+
+        $data = collect($data)->map(function($item) {
+            $item['date'] = $item->created_at->locale('pt-BR')->translatedFormat('d \de F \de Y');
+            $item['hour'] = $item->created_at->locale('pt-BR')->translatedFormat('H\hi');
+            
+            return $item;
+        });
+
+        $data = $data->groupBy('date');
+
+        return response()->json($data, 200);
+    }
 }

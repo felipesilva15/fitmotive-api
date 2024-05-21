@@ -59,7 +59,7 @@ class FinancialReportController extends Controller
         for ($i=5; $i >= 0; $i--) { 
             $baseDate = now()->subMonths($i);
 
-            array_push($inOutChartData['months'], ucwords($baseDate->format('F/Y')));
+            array_push($inOutChartData['months'], ucwords($baseDate->locale('pt-BR')->translatedFormat('F/Y')));
             array_push($inOutChartData['inflows'], $user->financial_transactions()->whereMonth('transaction_date', $baseDate->month)->whereYear('transaction_date', $baseDate->year)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount'));
             array_push($inOutChartData['outflows'], $user->financial_transactions()->whereMonth('transaction_date', $baseDate->month)->whereYear('transaction_date', $baseDate->year)->where('movement_type', MovementTypeEnum::Debit->value)->get()->sum('amount'));
         }

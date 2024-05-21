@@ -34,7 +34,7 @@ class DashboardController extends Controller
         for ($i=11; $i >= 0; $i--) { 
             $baseDate = now()->subMonths($i);
 
-            array_push($patientsChartData['months'], ucwords($baseDate->format('F/Y')));
+            array_push($patientsChartData['months'], ucwords($baseDate->locale('pt-BR')->translatedFormat('F/Y')));
             array_push($patientsChartData['total'], $user->provider->patients()->whereMonth('created_at', '<=', $baseDate->month)->whereYear('created_at', '<=', $baseDate->year)->get()->count());
             array_push($patientsChartData['new'], $user->provider->patients()->whereMonth('created_at', $baseDate->month)->whereYear('created_at', $baseDate->year)->get()->count());
         }
