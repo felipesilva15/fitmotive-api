@@ -29,6 +29,7 @@ use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
 use App\Enums\PaymentMethodTypeEnum;
 use App\Http\Controllers\ChargeLinkController;
+use App\Http\Controllers\QrCodeController;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
@@ -101,6 +102,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Charge link
     Route::apiResource('/charge_link', ChargeLinkController::class);
+
+    // Qr Code
+    Route::apiResource('/qr_code', QrCodeController::class);
 
     // Financial Transaction
     Route::apiResource('/financial_transaction', FinancialTransactionController::class);

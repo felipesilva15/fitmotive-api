@@ -51,6 +51,10 @@ class Charge extends Model
         return $this->hasMany(ChargeLink::class);
     }
 
+    public function qr_code(): HasOne {
+        return $this->hasOne(QrCode::class);
+    }
+
     public static function label(): string {
         return 'cobrança';
     }

@@ -34,6 +34,7 @@ class ChargeDTO extends DataTransferObject
     public PaymentStatusEnum $payment_status;
     #[CastWith(ArrayCaster::class, ChargeLinkDTO::class)]
     public array | null $charge_links;
+    public QrCodeDTO | null $qr_code;
     public string | null $paid_at;
     public string $created_at;
     public string | null $updated_at;
@@ -52,6 +53,7 @@ class ChargeDTO extends DataTransferObject
             'amount' => $model->amount,
             'payment_status' => $model->payment_status,
             'charge_links' => Utils::modelCollectionToDtoCollection($model->charge_links, ChargeLinkDTO::class),
+            'qr_code' => $model->qr_code ? QrCodeDTO::fromModel($model->qr_code) : null,
             'paid_at' => $model->paid_at,
             'created_at' => $model->created_at,
             'updated_at' => $model->updated_at,
