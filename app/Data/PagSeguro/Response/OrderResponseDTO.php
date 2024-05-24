@@ -12,7 +12,7 @@ class OrderResponseDTO extends DataTransferObject
     public string | null $reference_id;
     public string | null $created_at;
     public string | null $updated_at;
-    #[CastWith(ArrayCaster::class, itemType: SimpleResponseDTO::class)]
+    #[CastWith(ArrayCaster::class, itemType: QrCodeResponseDTO::class)]
     public array | null $qr_codes;
     #[CastWith(ArrayCaster::class, itemType: SimpleResponseDTO::class)]
     public array | null $charges;

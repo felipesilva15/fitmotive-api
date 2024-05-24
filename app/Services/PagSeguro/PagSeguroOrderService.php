@@ -14,7 +14,9 @@ use App\Enums\PaymentStatusEnum;
 use App\Enums\ResponseTypeEnum;
 use App\Models\Charge;
 use App\Models\FinancialTransaction;
+use App\Models\QrCode;
 use App\Services\System\LogService;
+use Carbon\Carbon;
 
 class PagSeguroOrderService
 {
@@ -37,24 +39,43 @@ class PagSeguroOrderService
         if (isset($response->charges[0])) {
             foreach ($response->charges[0]->links as $link) {
                 if ($link->media == "application/pdf") {
-                    $charge->charge_links()->create([
-                        'uri' => $link->href,
-                        'reference' => ChargeLinkReferenceEnum::Boleto,
-                        'response_type' => ResponseTypeEnum::Pdf
-                    ]);
+                    continue;
                 }
+
+                $charge->charge_links()->create([
+                    'uri' => $link->href,
+                    'reference' => ChargeLinkReferenceEnum::Boleto,
+                    'response_type' => ResponseTypeEnum::Pdf
+                ]);
+
+                break;
             }
         }
         
         if (isset($response->qr_codes[0])) {
-            foreach ($response->qr_codes[0]->links as $link) {
-                if ($link->media == "image/png") {
-                    $charge->charge_links()->create([
-                        'uri' => $link->href,
-                        'reference' => ChargeLinkReferenceEnum::QrCodePix,
-                        'response_type' => ResponseTypeEnum::Png
-                    ]);
+            $qr_code = $response->qr_codes[0];
+
+            foreach ($qr_code->links as $link) {
+                if ($link->media !== "image/png") {
+                    continue;
                 }
+
+                $charge->charge_links()->create([
+                    'uri' => $link->href,
+                    'reference' => ChargeLinkReferenceEnum::QrCodePix,
+                    'response_type' => ResponseTypeEnum::Png
+                ]);
+
+                QrCode::create([
+                    'charge_id' => $charge->id,
+                    'bank_gateway_id' => $qr_code->id,
+                    'image_uri' => $link->href,
+                    'text' => $qr_code->text,
+                    'amount' => $charge->amount,
+                    'expiration_date' => Carbon::create($qr_code->expiration_date)
+                ]);
+
+                break;
             }
         }
 
@@ -93,13 +114,13 @@ class PagSeguroOrderService
             'description' => 'Recebimento de pagamento',
             'movement_type' => MovementTypeEnum::Credit,
             'amount' => $charge->amount,
-            'transaction_date' => $response['charges'][0]['paid_at'],
+            'transaction_date' => Carbon::create($response['charges'][0]['paid_at']),
             'user_id' => auth()->user()->id
         ]);
 
         $charge->update([
             'payment_status' => PaymentStatusEnum::Paid,
-            'paid_at' => $response['charges'][0]['paid_at'],
+            'paid_at' => Carbon::create($response['charges'][0]['paid_at']),
             'financial_transaction_id' => $financialTransaction->id
         ]);
 
