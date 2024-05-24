@@ -18,7 +18,7 @@ class ChargePaymentMethodDTO extends DataTransferObject
 
     public static function fromModel(Charge $model) {
         return new self([
-            'type' => $model->patient->user->payment_method->type,
+            'type' => $model->payment_method,
             'installments' => 1,
             'capture' => false,
             'soft_descriptor' => 'Servico de saude',

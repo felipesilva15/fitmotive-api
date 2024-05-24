@@ -12,6 +12,7 @@ class AddressDTO extends DataTransferObject
     public string | null $complement;
     public string $locality;
     public string $city;
+    public string $region;
     public string $region_code;
     public string $country;
     public string $postal_code;
@@ -22,10 +23,11 @@ class AddressDTO extends DataTransferObject
             'street' => $model->street,
             'locality' => $model->locality,
             'city' => $model->city,
+            'region' => $model->city,
             'region_code' => $model->region_code,
             'country' => 'BRA',
             'number' => $model->number,
-            'complement' => str_replace(' ', '', $model->complement)
+            'complement' => $model->complement ? str_replace(' ', '', $model->complement) : null
         ]);
     }
 }

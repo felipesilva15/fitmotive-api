@@ -22,7 +22,7 @@ class ChargeDTO extends DataTransferObject
             'amount' => [
                 'value' => Utils::floatToStringBankFormat($model->amount)
             ],
-            'payment_method' => ChargePaymentMethodDTO::fromModel($model->patient->user->payment_method)
+            'payment_method' => ChargePaymentMethodDTO::fromModel($model)
         ]);
     }
 }

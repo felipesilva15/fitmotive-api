@@ -15,6 +15,7 @@ use App\Models\Patient;
 use App\Models\PaymentMethod;
 use App\Models\Phone;
 use App\Models\User;
+use App\Services\PagSeguro\PagSeguroOrderService;
 use App\Services\System\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -210,20 +211,27 @@ class PatientController extends Controller
         }
 
         $request->validate([
-            'due_date' => 'required|date'
+            'due_date' => 'required|date|after:now'
         ]);
 
-        $data = Charge::create([
-            'provider_id' => auth()->user()->provider->id,
-            'patient_id' => $patient->id,
-            'description' => 'Cobrança gerada automaticamente',
-            'payment_method' => $patient->user->payment_method->type,
-            'due_date' => $request->due_date,
-            'amount' => $patient->service_price,
-            'payment_status' => PaymentStatusEnum::Waiting
-        ]);
+        $data = DB::transaction(function () use ($patient, $request) {
+            $data = Charge::create([
+                'provider_id' => auth()->user()->provider->id,
+                'patient_id' => $patient->id,
+                'description' => 'Cobrança gerada automaticamente',
+                'payment_method' => $patient->user->payment_method->type,
+                'due_date' => $request->due_date,
+                'amount' => $patient->service_price,
+                'payment_status' => PaymentStatusEnum::Waiting
+            ]);
+    
+            LogService::log('Geração de cobrança (ID '.$data->id.')', LogActionEnum::Create);
+    
+            $orderService = new PagSeguroOrderService();
+            $orderService->create($data);
 
-        LogService::log('Geração de cobrança (ID '.$data->id.')', LogActionEnum::Create);
+            return $data;
+        });
 
         return response()->json($data, 200);
     }

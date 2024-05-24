@@ -96,6 +96,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Charge
     Route::apiResource('/charge', ChargeController::class);
     Route::patch('/pagseguro/charge/{id}/sync', [PagSeguroOrderController::class, 'sync']);
+    Route::get('/pagseguro/charge/{id}', [PagSeguroOrderController::class, 'show']);
+    Route::patch('/pagseguro/charge/{id}/check-status', [PagSeguroOrderController::class, 'checkStatus']);
 
     // Charge link
     Route::apiResource('/charge_link', ChargeLinkController::class);
