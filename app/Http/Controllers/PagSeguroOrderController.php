@@ -43,6 +43,18 @@ class PagSeguroOrderController extends BaseController
         return response()->json($response, 200);
     }
 
+    public function pay(int $id) {
+        $charge = Charge::find($id);
+
+        if (!$charge) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $response = $this->service->pay($charge);
+
+        return response()->json($response, 200);
+    }
+
     public function checkStatus(int $id) {
         $charge = Charge::find($id);
 
