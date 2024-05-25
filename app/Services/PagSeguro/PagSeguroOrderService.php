@@ -106,23 +106,32 @@ class PagSeguroOrderService
             return;
         }
 
-        if ($response['charges'][0]['status'] !== PaymentStatusEnum::Paid->value) {
-            return;
+        switch ($response['charges'][0]['status']) {
+            case PaymentStatusEnum::Paid->value:
+                $financialTransaction = FinancialTransaction::create([
+                    'description' => 'Recebimento de pagamento',
+                    'movement_type' => MovementTypeEnum::Credit,
+                    'amount' => $charge->amount,
+                    'transaction_date' => Carbon::create($response['charges'][0]['paid_at']),
+                    'user_id' => auth()->user()->id
+                ]);
+        
+                $charge->update([
+                    'payment_status' => PaymentStatusEnum::Paid,
+                    'paid_at' => Carbon::create($response['charges'][0]['paid_at']),
+                    'financial_transaction_id' => $financialTransaction->id
+                ]);
+                break;
+
+            case PaymentStatusEnum::Canceled->value:
+                $charge->update([
+                    'payment_status' => PaymentStatusEnum::Canceled
+                ]);
+            
+            default:
+                return;
+                break;
         }
-
-        $financialTransaction = FinancialTransaction::create([
-            'description' => 'Recebimento de pagamento',
-            'movement_type' => MovementTypeEnum::Credit,
-            'amount' => $charge->amount,
-            'transaction_date' => Carbon::create($response['charges'][0]['paid_at']),
-            'user_id' => auth()->user()->id
-        ]);
-
-        $charge->update([
-            'payment_status' => PaymentStatusEnum::Paid,
-            'paid_at' => Carbon::create($response['charges'][0]['paid_at']),
-            'financial_transaction_id' => $financialTransaction->id
-        ]);
 
         return $charge;
     }

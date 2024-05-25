@@ -16,12 +16,13 @@ class PagSeguroApiService
         $this->token = env('PAGSEGURO_API_TOKEN', '');
     }
 
-    public function request (string $url, HttpMethodEnum $method, array $data, string $dtoClass): mixed {
+    public function request(string $url, HttpMethodEnum $method, array $data, string $dtoClass): mixed {
         $response = $this->makeRequest($url, $method, $data);
 
         if(!$response->successful()) {
-            dd($response->json());
-            throw new ExternalToolErrorException();
+            $message = $this->parseError($response);
+
+            throw new ExternalToolErrorException($message);
         }
 
         if ($dtoClass) {
@@ -42,17 +43,27 @@ class PagSeguroApiService
             ->{$method->value}($url, $data);
     }
 
-    public function parseResponse (Response $response, string $dtoClass): mixed {
+    public function parseResponse(Response $response, string $dtoClass): mixed {
         return new $dtoClass($response->json());
     }
 
-    public function parseError (Response $response): array {
-        $error = [];
+    public function parseError(Response $response): string {
+        $data = $response->json();
 
-        foreach ($response->json()['error_messages'] as $message) {
-            array_push($error, new ErrorDTO($message));
+        if(!isset($data['error_messages'])) {
+            return 'Falha ao realizar comunicação com o PagSeguro.';
+        }
+
+        $data = $data['error_messages'];
+        $message = 'Falha ao realizar comunicação com o PagSeguro:'.PHP_EOL.PHP_EOL;
+
+        foreach ($response->json()['error_messages'] as $error) {
+            $field = $error['parameter_name'];
+            $description = $error['description'];
+
+            $message .= $field.' '.$description.PHP_EOL;
         }
         
-        return $error;
+        return $message;
     }
 }

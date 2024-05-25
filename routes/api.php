@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 use App\Enums\PaymentMethodTypeEnum;
 use App\Http\Controllers\ChargeLinkController;
 use App\Http\Controllers\QrCodeController;
+use App\Exceptions\ExternalToolErrorException;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
