@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\BillingRecurrenceEnum;
+use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentMethodTypeEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\ProviderProfessionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -80,6 +82,22 @@ class User extends Authenticatable implements JWTSubject
 
     public function logs(): HasMany {
         return $this->hasMany(Log::class);
+    }
+
+    public function inflows (): float {
+        return $this->financial_transactions()->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
+    }
+
+    public function outflows (): float {
+        return $this->financial_transactions()->where('movement_type', MovementTypeEnum::Debit->value)->get()->sum('amount');
+    }
+
+    public function balance (): float {
+        return $this->inflows() - $this->outflows(); 
+    }
+
+    public function pendingProfit (): float {
+        return $this->provider->charges()->where('payment_status', PaymentStatusEnum::Waiting)->get()->sum('amount');; 
     }
 
     public static function label(): string {

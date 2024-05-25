@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 
 class DashboardController extends Controller
 {
@@ -14,8 +15,10 @@ class DashboardController extends Controller
         $currentMonthPendingProfit = $user->provider->charges()->whereMonth('due_date', now()->month)->where('payment_status', PaymentStatusEnum::Waiting)->get()->sum('amount');
         $lastMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->subMonth()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
 
-        $pendingProfit = $user->provider->charges()->where('payment_status', PaymentStatusEnum::Waiting)->get()->sum('amount');
-        $totalProfit = $user->provider->charges()->get()->sum('amount');
+        $totalProfit = $user->provider->charges()->where(function(Builder $query) {
+            return $query->where('payment_status', '<>', PaymentStatusEnum::Canceled->value)
+                            ->orWhere('payment_status', '<>', PaymentStatusEnum::Declined->value);
+        })->get()->sum('amount');
 
         $patients = $user->provider->patients->sortBy('created_at');
 
@@ -51,8 +54,8 @@ class DashboardController extends Controller
                 'percent' => $lastMonthProfit != 0 ? 100 / $lastMonthProfit * ($currentMonthProfit - $lastMonthProfit) : 0
             ],
             "pending_profit" => [
-                'amount' => $pendingProfit,
-                'percent' => $totalProfit != 0 ? 100 / $totalProfit * $pendingProfit : 0
+                'amount' => $user->pendingProfit(),
+                'percent' => $totalProfit != 0 ? 100 / $totalProfit * $user->pendingProfit() : 0
             ]
         ];
 

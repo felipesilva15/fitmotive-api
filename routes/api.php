@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/qr_code', QrCodeController::class);
 
     // Financial Transaction
+    Route::patch('/financial_transaction/withdraw', [FinancialTransactionController::class, 'withdraw']);
     Route::apiResource('/financial_transaction', FinancialTransactionController::class);
 
     // Diet

@@ -45,11 +45,6 @@ class FinancialReportController extends Controller
     public function dashboard() {
         $user = auth()->user();
 
-        $inflows = $user->financial_transactions()->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
-        $outflows = $user->financial_transactions()->where('movement_type', MovementTypeEnum::Debit->value)->get()->sum('amount');
-        $pending = $user->provider->charges()->where('payment_status', '<>',PaymentStatusEnum::Paid)->get()->sum('amount');
-        $balance = $inflows - $outflows;
-
         $inOutChartData = [
             'months' => [],
             'inflows' => [],
@@ -74,10 +69,10 @@ class FinancialReportController extends Controller
         }
 
         $data = [
-            'inflows' => $inflows,
-            'outflows' => $outflows,
-            'pending' => $pending,
-            'balance' => $balance,
+            'inflows' => $user->inflows(),
+            'outflows' => $user->outflows(),
+            'pending' => $user->pendingProfit(),
+            'balance' => $user->balance(),
             'in_out_chart_data' => $inOutChartData,
             'payment_methods_most_used' => $paymentMethodsMostUsed
         ];
