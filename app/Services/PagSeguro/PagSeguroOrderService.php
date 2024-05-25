@@ -39,7 +39,7 @@ class PagSeguroOrderService
 
         if (isset($response->charges[0])) {
             foreach ($response->charges[0]->links as $link) {
-                if ($link->media == "application/pdf") {
+                if ($link->media !== "application/pdf") {
                     continue;
                 }
 
