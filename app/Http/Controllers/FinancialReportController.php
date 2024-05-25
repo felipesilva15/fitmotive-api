@@ -18,23 +18,23 @@ class FinancialReportController extends Controller
                                 ->withOnly('user:id,name,email,cpf_cnpj')
                                 ->without('user.adresses')
                                 ->with(['charges' => function($query) {
-                                    return $query->where('payment_status', '<>', PaymentStatusEnum::Paid->value)
+                                    return $query->where('payment_status', PaymentStatusEnum::Waiting->value)
                                                 ->where('due_date', '<', now());
                                 }])
                                 ->whereHas('charges', function($query) {
-                                    return $query->where('payment_status', '<>', PaymentStatusEnum::Paid->value)
+                                    return $query->where('payment_status', PaymentStatusEnum::Waiting->value)
                                                 ->where('due_date', '<', now());
                                 })
                                 ->withSum(['charges as total_amount_owed' => function($query) {
-                                    return $query->where('payment_status', '<>', PaymentStatusEnum::Paid->value)
+                                    return $query->where('payment_status', PaymentStatusEnum::Waiting->value)
                                                 ->where('due_date', '<', now());
                                 }], 'amount')
                                 ->withCount(['charges as quantity_total_charges' => function($query) {
-                                    return $query->where('payment_status', '<>', PaymentStatusEnum::Paid->value)
+                                    return $query->where('payment_status', PaymentStatusEnum::Waiting->value)
                                                 ->where('due_date', '<', now());
                                 }])
                                 ->withMax(['charges as last_charge_date' => function($query) {
-                                    return $query->where('payment_status', '<>', PaymentStatusEnum::Paid->value)
+                                    return $query->where('payment_status', PaymentStatusEnum::Waiting->value)
                                                 ->where('due_date', '<', now());
                                 }], 'due_date')
                                 ->get();

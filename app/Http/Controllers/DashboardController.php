@@ -11,10 +11,10 @@ class DashboardController extends Controller
         $user = auth()->user();
 
         $currentMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
-        $currentMonthPendingProfit = $user->provider->charges()->whereMonth('due_date', now()->month)->where('payment_status', '<>',PaymentStatusEnum::Paid)->get()->sum('amount');
+        $currentMonthPendingProfit = $user->provider->charges()->whereMonth('due_date', now()->month)->where('payment_status', PaymentStatusEnum::Waiting)->get()->sum('amount');
         $lastMonthProfit = $user->financial_transactions()->whereMonth('transaction_date', now()->subMonth()->month)->where('movement_type', MovementTypeEnum::Credit->value)->get()->sum('amount');
 
-        $pendingProfit = $user->provider->charges()->where('payment_status', '<>',PaymentStatusEnum::Paid)->get()->sum('amount');
+        $pendingProfit = $user->provider->charges()->where('payment_status', PaymentStatusEnum::Waiting)->get()->sum('amount');
         $totalProfit = $user->provider->charges()->get()->sum('amount');
 
         $patients = $user->provider->patients->sortBy('created_at');

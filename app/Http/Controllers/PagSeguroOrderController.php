@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Data\System\ChargeDTO;
 use App\Enums\LogActionEnum;
+use App\Enums\PaymentStatusEnum;
+use App\Exceptions\CustomValidationException;
 use App\Exceptions\MasterNotFoundHttpException;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Charge;
@@ -59,23 +61,10 @@ class PagSeguroOrderController extends BaseController
         $charge = Charge::find($id);
 
         if (!$charge) {
-            throw new MasterNotFoundHttpException;
-        }
-
-        if ($charge->paid_at) {
-            return response()->json([
-                'message' => 'A cobrança já foi paga'
-            ], 500);
+            throw new MasterNotFoundHttpException();
         }
 
         $response = $this->service->checkStatus($charge);
-
-        if (!$response) {
-            return response()->json([
-                'message' => 'Aguardando pagamento!'
-            ], 500);
-        }
-
         $data = ChargeDTO::fromModel($response);
 
         return response()->json($data, 200);
