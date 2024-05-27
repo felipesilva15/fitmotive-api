@@ -50,7 +50,7 @@ class ProviderController extends Controller
 
             $provider = $user->provider()->create($data);
 
-            LogService::log('Conta registrada na Fit Motive 🥳🎉', LogActionEnum::Create);
+            LogService::log('Conta registrada na Fit Motive 🥳🎉', LogActionEnum::Create, $user->id);
 
             return $provider;
         });
