@@ -9,7 +9,7 @@ class LogService
 {
     public static function log(string $description, LogActionEnum $action, int $userId = 0): void {
         Log::create([
-            'user_id' => $userId ? $userId : auth()->id,
+            'user_id' => $userId ? $userId : auth()->user()->id,
             'description' => $description,
             'action' => $action->value,
             'date' => now()
