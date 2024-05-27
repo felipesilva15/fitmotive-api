@@ -4,7 +4,6 @@ namespace App\Data\PagSeguro\Request;
 
 use App\Enums\PaymentMethodTypeEnum;
 use App\Models\Charge;
-use App\Models\PaymentMethod;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class ChargePaymentMethodDTO extends DataTransferObject
@@ -13,7 +12,7 @@ class ChargePaymentMethodDTO extends DataTransferObject
     public int $installments;
     public bool $capture;
     public string $soft_descriptor;
-    public PaymentCardDTO | null $card;
+    public CardDTO | null $card;
     public object | null $boleto;
 
     public static function fromModel(Charge $model) {

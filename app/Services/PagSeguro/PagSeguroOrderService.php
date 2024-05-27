@@ -12,6 +12,7 @@ use App\Enums\LogActionEnum;
 use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\ResponseTypeEnum;
+use App\Exceptions\CustomValidationException;
 use App\Models\Charge;
 use App\Models\FinancialTransaction;
 use App\Models\QrCode;
@@ -38,7 +39,7 @@ class PagSeguroOrderService
 
         if (isset($response->charges[0])) {
             foreach ($response->charges[0]->links as $link) {
-                if ($link->media == "application/pdf") {
+                if ($link->media !== "application/pdf") {
                     continue;
                 }
 
@@ -99,30 +100,51 @@ class PagSeguroOrderService
     }
 
     public function checkStatus(Charge $charge) {
+        if(!$charge->bank_gateway_id) {
+            throw new CustomValidationException('A cobrança não foi registrada! Não é possível sincronizar o status.');
+        }
+
+        if ($charge->paid_at) {
+            throw new CustomValidationException('A cobrança já foi paga! Não é possível sincronizar o status.');
+        }
+
+        if ($charge->payment_status == PaymentStatusEnum::Canceled->value || $charge->payment_status == PaymentStatusEnum::Declined->value) {
+            throw new CustomValidationException('A cobrança está cancelada/recusada! Não é possível sincronizar o status.');
+        }
+
         $response = $this->show($charge);
-        $response = collect($response);
 
         if (!isset($response['charges'][0]['status'])) {
-            return;
+            throw new CustomValidationException('A cobrança ainda está aguardando pagamento.');
         }
 
-        if ($response['charges'][0]['status'] !== PaymentStatusEnum::Paid->value) {
-            return;
+        if ($response['charges'][0]['status'] == $charge->payment_status) {
+            throw new CustomValidationException('Não houve nenhuma alteração no status da cobrança.');
         }
 
-        $financialTransaction = FinancialTransaction::create([
-            'description' => 'Recebimento de pagamento',
-            'movement_type' => MovementTypeEnum::Credit,
-            'amount' => $charge->amount,
-            'transaction_date' => Carbon::create($response['charges'][0]['paid_at']),
-            'user_id' => auth()->user()->id
-        ]);
-
-        $charge->update([
-            'payment_status' => PaymentStatusEnum::Paid,
-            'paid_at' => Carbon::create($response['charges'][0]['paid_at']),
-            'financial_transaction_id' => $financialTransaction->id
-        ]);
+        switch ($response['charges'][0]['status']) {
+            case PaymentStatusEnum::Paid->value:
+                $financialTransaction = FinancialTransaction::create([
+                    'description' => 'Recebimento de pagamento',
+                    'movement_type' => MovementTypeEnum::Credit,
+                    'amount' => $charge->amount,
+                    'transaction_date' => Carbon::create($response['charges'][0]['paid_at']),
+                    'user_id' => auth()->user()->id
+                ]);
+        
+                $charge->update([
+                    'payment_status' => PaymentStatusEnum::Paid,
+                    'paid_at' => Carbon::create($response['charges'][0]['paid_at']),
+                    'financial_transaction_id' => $financialTransaction->id
+                ]);
+                break;
+            
+            default:
+                $charge->update([
+                    'payment_status' => $response['charges'][0]['status']
+                ]);
+                break;
+        }
 
         return $charge;
     }
