@@ -11,6 +11,7 @@ use App\Models\Charge;
 use App\Models\PaymentMethod;
 use App\Models\Phone;
 use App\Models\Provider;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
@@ -49,12 +50,12 @@ class ChargeDTO extends DataTransferObject
             'patient_name' => $model->patient->user->name,
             'description' => $model->description,
             'payment_method' => $model->payment_method,
-            'due_date' => $model->due_date,
+            'due_date' => Carbon::create($model->due_date)->toISOString(),
             'amount' => $model->amount,
             'payment_status' => $model->payment_status,
             'charge_links' => Utils::modelCollectionToDtoCollection($model->charge_links, ChargeLinkDTO::class),
             'qr_code' => $model->qr_code ? QrCodeDTO::fromModel($model->qr_code) : null,
-            'paid_at' => $model->paid_at,
+            'paid_at' => $model->paid_at ? Carbon::create($model->paid_at)->toISOString() : null,
             'created_at' => $model->created_at,
             'updated_at' => $model->updated_at,
         ]);

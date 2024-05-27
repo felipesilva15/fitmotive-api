@@ -97,11 +97,11 @@ class PatientDTO extends DataTransferObject
             'payment_methods' => 'required|array|min:1',
             'payment_methods.*.id' => 'nullable|int',
             'payment_methods.*.type' => PaymentMethod::rules()['type'],
-            'payment_methods.*.card_number' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:21',
+            'payment_methods.*.card_number' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:21',
             'payment_methods.*.network_token' => PaymentMethod::rules()['network_token'],
-            'payment_methods.*.exp_month' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:2',
-            'payment_methods.*.exp_year' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:4',
-            'payment_methods.*.security_code' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:3',
+            'payment_methods.*.exp_month' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:2',
+            'payment_methods.*.exp_year' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:4',
+            'payment_methods.*.security_code' => 'required_if:payment_methods.*.type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:3',
             'payment_methods.*.main' => PaymentMethod::rules()['main'],
         ];
     } 

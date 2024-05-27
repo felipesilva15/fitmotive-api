@@ -39,11 +39,11 @@ class PaymentMethod extends Model
         return [
             'user_id' => 'required|int',
             'type' => ['required', ValidationRule::enum(PaymentMethodTypeEnum::class)],
-            'card_number' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:21',
+            'card_number' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:21',
             'network_token' => 'nullable|string|max:40',
-            'exp_month' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:2',
-            'exp_year' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:4',
-            'security_code' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.','.PaymentMethodTypeEnum::DebitCard->value.'|nullable|string|max:3',
+            'exp_month' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:2',
+            'exp_year' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:4',
+            'security_code' => 'required_if:type,'.PaymentMethodTypeEnum::CreditCard->value.'|nullable|string|max:3',
             'main' => 'boolean'
         ];
     }
