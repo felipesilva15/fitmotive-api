@@ -1,6 +1,7 @@
 <?php
 
 use App\Data\PagSeguro\Request\OrderDTO;
+use App\Data\PagSeguro\Request\SubscriberDTO;
 use App\Data\PagSeguro\Request\SubscriptionDTO;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
@@ -90,6 +91,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Subscription
     Route::apiResource('/subscription', SubscriptionController::class);
     Route::patch('/pagseguro/subscription/{id}/sync', [PagSeguroSubscriptionController::class, 'sync']);
+    Route::get('/pagseguro/subscription/{id}', [PagSeguroSubscriptionController::class, 'show']);
+    Route::get('/pagseguro/subscription/{id}/invoices', [PagSeguroSubscriptionController::class, 'invoices']);
+    Route::get('/pagseguro/subscription/{id}/complete', [PagSeguroSubscriptionController::class, 'showComplete']);
 
     // Patient
     Route::apiResource('/patient', PatientController::class);

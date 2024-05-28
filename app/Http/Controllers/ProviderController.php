@@ -11,8 +11,13 @@ use App\Data\System\PatientDTO;
 use App\Data\System\ProviderDTO;
 use App\Enums\LogActionEnum;
 use App\Enums\MovementTypeEnum;
+use App\Enums\PaymentStatusEnum;
+use App\Exceptions\ExternalToolErrorException;
 use App\Exceptions\MasterNotFoundHttpException;
+use App\Models\Subscription;
 use App\Models\User;
+use App\Services\PagSeguro\PagSeguroSubscriberService;
+use App\Services\PagSeguro\PagSeguroSubscriptionService;
 use App\Services\System\LogService;
 use Illuminate\Support\Facades\DB;
 
@@ -49,6 +54,19 @@ class ProviderController extends Controller
             }
 
             $provider = $user->provider()->create($data);
+
+            $subscriberService = new PagSeguroSubscriberService();
+            $subscriberService->create($user);
+
+            $subscription = $provider->subscription()->create([
+                'plan_id' => $provider->plan_id,
+                'amount' => $provider->plan->price,
+                'pro_rata' => false,
+                'payment_status' => PaymentStatusEnum::Waiting
+            ]);
+
+            $subscriptionService = new PagSeguroSubscriptionService();
+            $subscriptionService->create($subscription);
 
             LogService::log('Conta registrada na Fit Motive 🥳🎉', LogActionEnum::Create, $user->id);
 
