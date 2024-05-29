@@ -6,6 +6,7 @@ use App\Enums\LogActionEnum;
 use App\Exceptions\MasterNotFoundHttpException;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
+use App\Services\PagSeguro\PagSeguroSubscriptionService;
 use App\Services\System\LogService;
 
 class PagSeguroSubscriberController extends Controller
@@ -27,6 +28,19 @@ class PagSeguroSubscriberController extends Controller
         $response = $this->service->create($user);
 
         LogService::log('Registro de assinante no PagSeguro (ID '.$user->id.')', LogActionEnum::Other);
+
+        return response()->json($response, 200);
+    }
+
+    public function subscription(int $id) {
+        $user = User::find($id);
+
+        if (!$user) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $subscriptionService = new PagSeguroSubscriptionService();
+        $response = $subscriptionService->showComplete($user->provider->subscription);
 
         return response()->json($response, 200);
     }

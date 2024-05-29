@@ -18,7 +18,7 @@ class PagSeguroSubscriptionService
         $this->api = new PagSeguroApiService();
     }
 
-    public function create(Subscription $subscription) {
+    public function create(Subscription $subscription): Subscription {
         $body = SubscriptionDTO::fromModel($subscription)->toArray();
         $response = $this->api->request($this->baseUrl, HttpMethodEnum::POST, $body, SubscriptionResponseDTO::class);
 
@@ -33,21 +33,21 @@ class PagSeguroSubscriptionService
         return $subscription;
     }
 
-    public function show(Subscription $subscription) {
+    public function show(Subscription $subscription): SubscriptionResponseDTO {
         $body = [];
         $response = $this->api->request($this->baseUrl.'/'.$subscription->bank_gateway_id, HttpMethodEnum::GET, $body, SubscriptionResponseDTO::class);
 
         return $response;
     }
 
-    public function invoices(Subscription $subscription) {
+    public function invoices(Subscription $subscription): SubscriptionInvoicesResponseDTO {
         $body = [];
         $response = $this->api->request($this->baseUrl.'/'.$subscription->bank_gateway_id.'/invoices', HttpMethodEnum::GET, $body, SubscriptionInvoicesResponseDTO::class);
 
         return $response;
     }
 
-    public function showComplete(Subscription $subscription) {
+    public function showComplete(Subscription $subscription): SubscriptionResponseDTO {
         $response = $this->show($subscription);
         $subscriptionInvoices = $this->invoices($subscription);
 

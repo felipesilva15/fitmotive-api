@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
     Route::patch('/pagseguro/subscriber/{id}/sync', [PagSeguroSubscriberController::class, 'sync']);
+    Route::patch('/pagseguro/subscriber/{id}/subscription', [PagSeguroSubscriberController::class, 'subscription']);
 
     // Phone
     Route::apiResource('/phone', PhoneController::class);
