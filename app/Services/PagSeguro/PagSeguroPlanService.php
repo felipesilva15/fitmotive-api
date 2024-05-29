@@ -18,7 +18,7 @@ class PagSeguroPlanService
     }
 
     public function create (Plan $plan) {
-        $body = PlanDTO::fromPlan($plan)->toArray();
+        $body = PlanDTO::fromModel($plan)->toArray();
         $response = $this->api->request($this->baseUrl, HttpMethodEnum::POST, $body, SimpleResponseDTO::class);
 
         $plan->update([

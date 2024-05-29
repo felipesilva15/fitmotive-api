@@ -3,7 +3,6 @@
 namespace App\Data\PagSeguro\Request;
 
 use App\Models\Charge;
-use App\Models\User;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class BoletoDTO extends DataTransferObject

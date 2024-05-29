@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Contracts\DtoInterface;
 use App\Enums\CrudActionEnum;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;

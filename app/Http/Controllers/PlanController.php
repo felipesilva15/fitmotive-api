@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
-use App\Services\System\PlanService;
 use Illuminate\Http\Request;
 
 class PlanController extends Controller

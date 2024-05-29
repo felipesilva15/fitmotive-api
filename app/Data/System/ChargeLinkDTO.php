@@ -3,10 +3,7 @@
 namespace App\Data\System;
 
 use App\Enums\ChargeLinkReferenceEnum;
-use App\Enums\PaymentMethodTypeEnum;
-use App\Enums\PaymentStatusEnum;
 use App\Enums\ResponseTypeEnum;
-use App\Models\Charge;
 use App\Models\ChargeLink;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\EnumCaster;

@@ -2,7 +2,6 @@
 
 namespace App\Services\PagSeguro;
 
-use App\Data\PagSeguro\Request\ChargeDTO;
 use App\Data\PagSeguro\Request\OrderDTO;
 use App\Data\PagSeguro\Response\OrderResponseDTO;
 use App\Data\PagSeguro\Response\SimpleResponseDTO;

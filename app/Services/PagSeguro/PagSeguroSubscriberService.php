@@ -5,7 +5,6 @@ namespace App\Services\PagSeguro;
 use App\Data\PagSeguro\Request\SubscriberDTO;
 use App\Data\PagSeguro\Response\SimpleResponseDTO;
 use App\Enums\HttpMethodEnum;
-use App\Exceptions\ExternalToolErrorException;
 use App\Models\User;
 
 class PagSeguroSubscriberService

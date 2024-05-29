@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\LogActionEnum;
 use App\Exceptions\MasterNotFoundHttpException;
-use App\Models\Plan;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriberService;
 use App\Services\System\LogService;

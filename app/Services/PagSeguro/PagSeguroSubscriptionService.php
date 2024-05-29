@@ -2,13 +2,10 @@
 
 namespace App\Services\PagSeguro;
 
-use App\Data\PagSeguro\Request\PlanDTO;
 use App\Data\PagSeguro\Request\SubscriptionDTO;
-use App\Data\PagSeguro\Response\SimpleResponseDTO;
 use App\Data\PagSeguro\Response\SubscriptionInvoicesResponseDTO;
 use App\Data\PagSeguro\Response\SubscriptionResponseDTO;
 use App\Enums\HttpMethodEnum;
-use App\Models\Plan;
 use App\Models\Subscription;
 
 class PagSeguroSubscriptionService

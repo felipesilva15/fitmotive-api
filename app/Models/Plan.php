@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\PlanBillingIntervalEnum;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule as ValidationRule;

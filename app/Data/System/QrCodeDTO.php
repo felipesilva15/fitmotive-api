@@ -2,7 +2,6 @@
 
 namespace App\Data\System;
 
-use App\Data\System\AddressDTO;
 use App\Models\QrCode;
 use Carbon\Carbon;
 use Spatie\DataTransferObject\DataTransferObject;

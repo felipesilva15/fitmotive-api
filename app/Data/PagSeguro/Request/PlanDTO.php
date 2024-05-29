@@ -4,10 +4,8 @@ namespace App\Data\PagSeguro\Request;
 
 use App\Enums\CurrencyEnum;
 use App\Enums\PaymentMethodTypeEnum;
-use App\Enums\PlanBillingIntervalEnum;
 use App\Helpers\Utils;
 use App\Models\Plan;
-use Spatie\DataTransferObject\Attributes\MapFrom;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class PlanDTO extends DataTransferObject
@@ -21,7 +19,7 @@ class PlanDTO extends DataTransferObject
     public TrialDTO | null $trial;
     public array $payment_method = [PaymentMethodTypeEnum::CreditCard->value];
 
-    public static function fromPlan(Plan $plan) {
+    public static function fromModel(Plan $plan) {
         return new self([
             'reference_id' => $plan->id,
             'name' => $plan->name,

@@ -4,15 +4,9 @@ namespace App\Data\System;
 
 use App\Enums\PaymentMethodTypeEnum;
 use App\Enums\PaymentStatusEnum;
-use App\Enums\ProviderProfessionEnum;
 use App\Helpers\Utils;
-use App\Models\Address;
 use App\Models\Charge;
-use App\Models\PaymentMethod;
-use App\Models\Phone;
-use App\Models\Provider;
 use Carbon\Carbon;
-use Illuminate\Validation\Rule;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
 use Spatie\DataTransferObject\Casters\EnumCaster;

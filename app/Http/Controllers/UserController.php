@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\LogActionEnum;
 use App\Exceptions\CustomValidationException;
-use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use App\Services\AWS\EmailSenderService;
 use App\Services\System\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class UserController extends Controller

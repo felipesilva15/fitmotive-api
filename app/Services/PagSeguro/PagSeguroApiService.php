@@ -2,7 +2,6 @@
 
 namespace App\Services\PagSeguro;
 
-use App\Data\PagSeguro\Response\ErrorDTO;
 use App\Enums\HttpMethodEnum;
 use App\Exceptions\ExternalToolErrorException;
 use Illuminate\Http\Client\Response;

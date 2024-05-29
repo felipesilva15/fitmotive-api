@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Data\System\ChargeDTO;
-use App\Enums\LogActionEnum;
-use App\Enums\PaymentStatusEnum;
-use App\Exceptions\CustomValidationException;
 use App\Exceptions\MasterNotFoundHttpException;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Charge;
 use App\Services\PagSeguro\PagSeguroOrderService;
-use App\Services\System\LogService;
 
 class PagSeguroOrderController extends BaseController
 {

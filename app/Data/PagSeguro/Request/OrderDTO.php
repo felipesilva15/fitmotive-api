@@ -6,7 +6,6 @@ use App\Enums\PaymentMethodTypeEnum;
 use App\Helpers\Utils;
 use App\Models\Charge;
 use Carbon\Carbon;
-use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class OrderDTO extends DataTransferObject

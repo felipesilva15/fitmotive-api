@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\LogActionEnum;
 use App\Http\Controllers\Controller;
 use App\Services\System\LogService;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
