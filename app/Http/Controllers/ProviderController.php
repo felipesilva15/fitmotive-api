@@ -55,9 +55,6 @@ class ProviderController extends Controller
 
             $provider = $user->provider()->create($data);
 
-            $subscriberService = new PagSeguroSubscriberService();
-            $subscriberService->create($user);
-
             $subscription = $provider->subscription()->create([
                 'plan_id' => $provider->plan_id,
                 'amount' => $provider->plan->price,

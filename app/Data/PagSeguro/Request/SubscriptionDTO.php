@@ -9,7 +9,7 @@ class SubscriptionDTO extends DataTransferObject
 {
     public string $reference_id;
     public SimpleRequestDTO $plan;
-    public SimpleRequestDTO $customer;
+    public SubscriberDTO $customer;
     public array | null $payment_method;
     public bool $pro_rata;
 
@@ -19,9 +19,7 @@ class SubscriptionDTO extends DataTransferObject
             'plan' => [
                 'id' => $model->plan->bank_gateway_id
             ],
-            'customer' => [
-                'id' => $model->provider->user->bank_gateway_id
-            ],
+            'customer' => SubscriberDTO::fromModel($model->provider->user),
             'payment_method' => [PaymentMethodDTO::fromModel($model->provider->user->payment_method)],
             'pro_rata' => $model->pro_rata
         ]);

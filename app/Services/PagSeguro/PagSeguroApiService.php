@@ -20,7 +20,13 @@ class PagSeguroApiService
         $response = $this->makeRequest($url, $method, $data);
 
         if(!$response->successful()) {
-            $message = $this->parseError($response);
+            $message = '';
+
+            try {
+                $message = $this->parseError($response);
+            } catch (\Throwable $th) {
+                $message = 'Falha ao realizar comunicação com o PagSeguro:'.PHP_EOL.PHP_EOL.json_encode($response->json());
+            }
 
             throw new ExternalToolErrorException($message);
         }

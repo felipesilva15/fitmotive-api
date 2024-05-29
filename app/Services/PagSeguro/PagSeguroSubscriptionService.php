@@ -23,10 +23,14 @@ class PagSeguroSubscriptionService
 
     public function create(Subscription $subscription) {
         $body = SubscriptionDTO::fromModel($subscription)->toArray();
-        $response = $this->api->request($this->baseUrl, HttpMethodEnum::POST, $body, SimpleResponseDTO::class);
+        $response = $this->api->request($this->baseUrl, HttpMethodEnum::POST, $body, SubscriptionResponseDTO::class);
 
         $subscription->update([
             'bank_gateway_id' => $response->id
+        ]);
+
+        $subscription->provider->user()->update([
+            'bank_gateway_id' => $response->customer->id
         ]);
 
         return $subscription;

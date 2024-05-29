@@ -16,6 +16,7 @@ class SubscriptionResponseDTO extends DataTransferObject
     public PaymentStatusEnum | null $status;
     public TrialResponseDTO | null $trial;
     public string | null $next_invoice_at;
+    public SimpleResponseDTO $customer;
     #[CastWith(ArrayCaster::class, itemType: InvoiceResponseDTO::class)]
     public array | null $invoices;
     public string | null $created_at;

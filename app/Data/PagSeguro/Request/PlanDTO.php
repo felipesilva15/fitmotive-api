@@ -3,6 +3,7 @@
 namespace App\Data\PagSeguro\Request;
 
 use App\Enums\CurrencyEnum;
+use App\Enums\PaymentMethodTypeEnum;
 use App\Enums\PlanBillingIntervalEnum;
 use App\Helpers\Utils;
 use App\Models\Plan;
@@ -18,7 +19,7 @@ class PlanDTO extends DataTransferObject
     public AmountDTO | null $amount;
     public IntervalDTO | null $interval;
     public TrialDTO | null $trial;
-    public array $payment_method = ['CREDIT_CARD'];
+    public array $payment_method = [PaymentMethodTypeEnum::CreditCard->value];
 
     public static function fromPlan(Plan $plan) {
         return new self([
@@ -37,6 +38,10 @@ class PlanDTO extends DataTransferObject
                 'days' => $plan->trial_days,
                 'enabled' => $plan->trial_days ? true : false,
                 'hold_setup_fee' => false
+            ],
+            'payment_method' => [
+                PaymentMethodTypeEnum::CreditCard->value,
+                PaymentMethodTypeEnum::Boleto->value,
             ]
         ]);
     }

@@ -14,7 +14,7 @@ class CardHolderDTO extends DataTransferObject
 
     public static function fromModel(User $model) {
         return new self([
-            'name' => preg_replace( '/[\W]/', '', $model->name),
+            'name' => preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($model->name))),
             'birth_date' => $model->birth_date,
             'tax_id' => $model->cpf_cnpj,
             'phone' => PhoneDTO::fromModel($model->phone)

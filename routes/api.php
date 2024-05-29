@@ -1,8 +1,5 @@
 <?php
 
-use App\Data\PagSeguro\Request\OrderDTO;
-use App\Data\PagSeguro\Request\SubscriberDTO;
-use App\Data\PagSeguro\Request\SubscriptionDTO;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChargeController;
@@ -23,15 +20,9 @@ use App\Http\Controllers\PagSeguroSubscriptionController;
 use App\Http\Controllers\SearchCepController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\LogController;
-use App\Models\Charge;
-use App\Models\Subscription;
-use App\Models\User;
-use App\Services\PagSeguro\PagSeguroSubscriberService;
 use Illuminate\Support\Facades\Route;
-use App\Enums\PaymentMethodTypeEnum;
 use App\Http\Controllers\ChargeLinkController;
 use App\Http\Controllers\QrCodeController;
-use App\Exceptions\ExternalToolErrorException;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
