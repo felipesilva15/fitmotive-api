@@ -40,21 +40,3 @@ jobs:
       - name: Push to Docker Hub
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/$(basename ${{ github.repository }}):latest
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Log in to Google Container Registry (GCR)
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" | docker login -u _json_key --password-stdin https://gcr.io
-
-      - name: Tag Docker image for Google Container Registry (GCR)
-        run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/$(basename ${{ github.repository }}):latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/$(basename ${{ github.repository }}):latest
-
-      - name: Push to Google Container Registry (GCR)
-        run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$(basename ${{ github.repository }}):latest
