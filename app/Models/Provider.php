@@ -47,6 +47,10 @@ class Provider extends Model
         return $this->hasOne(Subscription::class);
     }
 
+    public function workouts(): HasMany {
+        return $this->hasMany(Workout::class);
+    }
+
     public static function label(): string {
         return 'prestador';
     }

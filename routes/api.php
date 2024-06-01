@@ -22,7 +22,9 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChargeLinkController;
+use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\WorkoutController;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
@@ -119,6 +121,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Reports
     Route::get('/reports/financial/defaulters', [FinancialReportController::class, 'defaulters']);
     Route::get('/reports/financial/dashboard', [FinancialReportController::class, 'dashboard']);
+
+    // Workout
+    Route::apiResource('/workout', WorkoutController::class);
+
+    // Exercice
+    Route::apiResource('/exercice', ExerciceController::class);
 
     // Logs
     Route::apiResource('/log', LogController::class);
