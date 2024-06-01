@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/provider/{id}', [ProviderController::class, 'destroy']);
     Route::get('/provider/{id}/patients', [ProviderController::class, 'patients']);
     Route::get('/provider/{id}/charges', [ProviderController::class, 'charges']);
+    Route::get('/provider/{id}/workouts', [ProviderController::class, 'workouts']);
     Route::get('/provider/{id}/financial_transactions', [ProviderController::class, 'financialTransactions']);
     Route::get('/provider/{id}/logs', [ProviderController::class, 'logs']);
 

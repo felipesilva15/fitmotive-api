@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Utils;
 use App\Data\System\PatientDTO;
 use App\Data\System\ProviderDTO;
+use App\Data\System\WorkoutDTO;
 use App\Enums\LogActionEnum;
 use App\Enums\MovementTypeEnum;
 use App\Enums\PaymentStatusEnum;
@@ -92,6 +93,18 @@ class ProviderController extends Controller
         }
 
         $data = Utils::modelCollectionToDtoCollection($provider->charges, ChargeDTO::class);
+
+        return response()->json($data->sortByDesc('id')->values()->all(), 200);
+    }
+
+    public function workouts(int $id) {
+        $provider = Provider::find($id);
+
+        if (!$provider) {
+            throw new MasterNotFoundHttpException;
+        }
+
+        $data = Utils::modelCollectionToDtoCollection($provider->workouts, WorkoutDTO::class);
 
         return response()->json($data->sortByDesc('id')->values()->all(), 200);
     }
