@@ -48,6 +48,10 @@ class DashboardController extends Controller
                 "new_this_month" => $user->provider->patients()->whereMonth('created_at', now()->month)->count(),
                 "overview_chart_data" => $patientsChartData
             ],
+            "workouts" => [
+                "count" => $user->provider->workouts->count(),
+                "new_this_month" => $user->provider->workouts()->whereMonth('created_at', now()->month)->count(),
+            ],
             "monthly_profit" => [
                 'amount' => $currentMonthProfit,
                 'pending' => $currentMonthPendingProfit,
