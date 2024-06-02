@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\PlanBillingIntervalEnum;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -32,7 +31,7 @@ class PlanSeeder extends Seeder
                 'price' => 79.9,
                 'trial_days' => 30,
                 'billing_interval' => PlanBillingIntervalEnum::Monthly,
-                'bank_gateway_id' => ''
+                'bank_gateway_id' => 'PLAN_714FF625-EA2E-4FDD-B7A6-5A7A0F4741A8'
             ]);
         }
 
@@ -43,7 +42,7 @@ class PlanSeeder extends Seeder
                 'price' => 119.9,
                 'trial_days' => 30,
                 'billing_interval' => PlanBillingIntervalEnum::Monthly,
-                'bank_gateway_id' => ''
+                'bank_gateway_id' => 'PLAN_860CE026-BF8D-48C0-AB22-79119A43C32E'
             ]);
         }
     }

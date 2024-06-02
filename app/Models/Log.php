@@ -15,7 +15,8 @@ class Log extends Model
     protected $fillable = [
         'user_id',
         'description',
-        'action'
+        'action',
+        'date'
     ];
 
     protected $cast = [

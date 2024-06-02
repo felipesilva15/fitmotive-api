@@ -16,6 +16,7 @@ use App\Exceptions\MasterNotFoundHttpException;
 use App\Models\User;
 use App\Services\PagSeguro\PagSeguroSubscriptionService;
 use App\Services\System\LogService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProviderController extends Controller
@@ -150,11 +151,13 @@ class ProviderController extends Controller
             throw new MasterNotFoundHttpException;
         }
 
-        $data = $provider->user->logs()->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get();
+        $data = $provider->user->logs()->orderBy('date', 'desc')->orderBy('id', 'desc')->get();
 
         $data = collect($data)->map(function($item) {
-            $item['date'] = $item->created_at->locale('pt-BR')->translatedFormat('d \de F \de Y');
-            $item['hour'] = $item->created_at->locale('pt-BR')->translatedFormat('H\hi');
+            $date = Carbon::create($item->date)->locale('pt-BR');
+
+            $item['date'] = $date->translatedFormat('d \de F \de Y');
+            $item['hour'] = $date->translatedFormat('H\hi');
             
             return $item;
         });
