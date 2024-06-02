@@ -45,4 +45,10 @@ jobs:
           docker push ${{ env.DOCKER_IMAGE_URL }}:latest
 
       - name: Deploy to Cloud Run
-        run: gcloud run deploy $SERVICE_NAME --image $IMAGE_NAME:latest --region us-central1 --platform managed --port 8000
+        run: |
+          echo SERVICE_NAME $SERVICE_NAME
+          gcloud run deploy $SERVICE_NAME \
+            --image ${{ env.DOCKER_IMAGE_URL }}:latest \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated
