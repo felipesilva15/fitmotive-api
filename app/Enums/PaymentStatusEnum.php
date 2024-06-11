@@ -11,4 +11,5 @@ enum PaymentStatusEnum: string
     case InAnalysis = 'IN_ANALYSIS';
     case Authorized = 'AUTHORIZED';
     case Trial = 'TRIAL';
+    case Active = 'ACTIVE';
 }
