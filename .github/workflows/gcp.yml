@@ -2,7 +2,7 @@ name: Deploy to Cloud Run (GCP)
 
 env:
   SERVICE_NAME: fitmotive-api
-  DOCKER_IMAGE_URL: us-central1-docker.pkg.dev/fitmotive/fitmotive-api/fitmotive-api
+  DOCKER_IMAGE_URL: us-central1-docker.pkg.dev/fitmotive/fitmotive/fitmotive-api
 
 on:
   push:
